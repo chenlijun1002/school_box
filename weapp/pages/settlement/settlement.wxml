@@ -1,0 +1,13 @@
+
+<view>
+  <van-cell bind_init="_initComponent" title="订单编号" value="{{ordersn}}" title-class="color-010101" value-class="color-333"></van-cell>
+  <van-cell bind_init="_initComponent" title="订单金额" value="￥{{je}}" title-class="color-010101" value-class="color-333"></van-cell>
+  <van-cell bind_init="_initComponent" title="支付方式" value="微信支付" is-link="{{ true }}" title-class="color-010101" value-class="color-333"></van-cell>
+  <view style="padding: 40rpx 75rpx;">
+    <view data-wpy-evt="13-0" bindtap="_proxy" class="btn">确认支付</view>
+  </view>
+   <van-toast bind_init="_initComponent" id="van-toast"></van-toast>
+   <van-dialog bind_init="_initComponent" use-slot="" title="登录授权" show="{{ showMsgModal }}" show-cancel-button="" confirm-button-open-type="getUserInfo" data-wpy-evt="13-1" bindclose="_proxy" bindgetuserinfo="_proxy">
+    <text>登录授权</text>
+  </van-dialog>
+</view>

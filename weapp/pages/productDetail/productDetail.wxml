@@ -1,0 +1,43 @@
+
+<view wx:if="{{ loaded }}" class="main">
+  <view class="header">
+    
+    <image src="{{ baseUrl+info.mainimage }}" mode="aspectFit" style="width:100%;height:580rpx;" class="slide-image"></image>
+  </view>
+  <view style="padding:30rpx;" class="bg-fff">
+      <view class="flex-box justify-between mb30">
+          <view class="font-32 color-333">{{info.name}}</view>
+          
+      </view>
+      <view class="flex-box justify-between">
+          <view class="font-48 color-FA4B44"><text class="font-35">￥</text>{{info.price||'0.00'}}</view>
+          <view>
+              <van-stepper bind_init="_initComponent" value="{{ num }}" integer="" min="1" max="{{info.num}}" step="1" data-wpy-evt="16-0" bindchange="_proxy"></van-stepper>
+          </view>
+      </view>
+  </view>
+  <view class="product-detail-title">商品详情</view>
+  <view class="product-detail-content">
+    <block wx:for="{{ info.goodsdesc }}" wx:for-index="index" wx:for-item="item" wx:key="index" key="{{ index }}" wx:if="{{ info.goodsdesc }}">
+        <rich-text nodes="{{[item]}}" style="width:100%;max-width:100%!important;"></rich-text>   
+    </block> 
+  </view>
+  <view class="submit-bar">
+      <view style="height:100%;" class="flex-box justify-between">
+          <view style="padding-left:38rpx;" class="flex-box">
+              <view data-wpy-evt="16-1" bindtap="_proxy" class="cart-icon">
+                  <image src="../../images/cart-2.png" class="cart-img"></image>
+                  <view class="num">{{cartNum}}</view>
+              </view>
+              <view style="display: inline-block;" class="font-48 color-FA4B44"><text class="font-35">￥</text>{{totalPrice}}</view>
+          </view>
+          <view>
+            <view data-wpy-evt="16-2" bindtap="_proxy" style="background-color: rgba(13,255,224,0.6);" class="submit-btn">加入购物车</view>
+            <view data-wpy-evt="16-3" bindtap="_proxy" class="submit-btn">结算</view>
+          </view>
+      </view>
+  </view>
+  <van-dialog bind_init="_initComponent" use-slot="" title="登录授权" show="{{ showMsgModal }}" show-cancel-button="" confirm-button-open-type="getUserInfo" data-wpy-evt="16-4" bindclose="_proxy" bindgetuserinfo="_proxy">
+    <text>登录授权</text>
+  </van-dialog>
+</view>

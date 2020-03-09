@@ -1,0 +1,487 @@
+<style lang="less"> 
+  page{
+    background-color: #F7F6F9;
+  }
+  .header{
+    padding:13rpx 24rpx 28rpx;
+    background-color: #ffffff;
+    margin-bottom: 10rpx;
+    position: relative;
+    &::after{
+      content:'';
+      position: absolute;
+      top:0;
+      left: 0;
+      width: 100%;
+      height: 1rpx;
+      border-top: 1px solid #e8e8e8;
+      transform: scaleY(0.5);
+    }
+    .slide-image{
+      width: 100%;
+      height: 310rpx;
+      border-radius: 12rpx;
+    }
+  }
+  .van-sidebar-item{    
+    background-color: #fff !important;
+    font-size: 26rpx !important;
+    color:#323232 !important;
+    padding: 18px 0 !important;
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .van-sidebar-item--selected,.van-sidebar-item--selected.van-sidebar-item--hover {
+    background-color: #F7F6F9 !important;
+    border-color: #0DFFE0 !important;
+    font-size: 30rpx !important;
+    color:#151515 !important;
+  }
+  .product-img{
+      width: 120rpx;
+      height: 120rpx;
+      border-radius: 6rpx;
+  }
+  .product-item{
+    padding:23rpx 30rpx 23rpx 20rpx;
+    margin-bottom: 16rpx;
+    position: relative;
+    &::after{
+      content:'';
+      position:absolute;
+      bottom: 0;
+      left: 30rpx;
+      width: calc(100% - 60rpx);
+      height: 1rpx;
+      border-bottom: 1px solid #e8e8e8;
+      transform:scaleY(0.5);
+    }
+  }
+  .product-item:last-child{
+    margin-bottom:0;
+    &::after{
+      border-width: 0;
+    }
+  }
+  .submit-bar{
+    position:fixed;
+    left: 0;
+    bottom: 98rpx;
+    padding:14rpx 40rpx;
+    box-sizing: border-box;
+    width: 100%;
+    background-color:#fff;
+    box-shadow:0px -6px 8px 0px rgba(9,2,4,0.02);
+    .cart-icon{
+      position: relative;
+      width:50rpx;
+      height: 50rpx;
+      .cart-img{
+        width:100%;
+        height: 100%;
+      }
+      .num{
+        min-width: 28rpx;
+        min-height: 28rpx;
+        text-align:center;
+        line-height:28rpx;
+        position: absolute;
+        right:-5rpx;
+        top:-6rpx;
+       /* padding:8rpx; */
+        background:#FF794A;
+        border-radius:50%;
+        font-size:20rpx;
+        color:#fff;
+      }
+    }
+    .submit-btn{
+      width: 130rpx;
+      height: 58rpx;
+      line-height: 58rpx;
+      text-align: center;
+      color:#000;
+      font-size:28rpx;
+      background-color:#0DFFE0;
+      border-radius:29rpx;     
+    }
+  }  
+  .tabbar{
+    position:fixed;
+    left: 0;
+    bottom: 0;    
+    box-sizing: border-box;
+    width: 100%;
+    background-color:#fff;
+    height: 100rpx;
+    background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAu4AAABlCAYAAAAS9Wb4AAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyhpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuNi1jMTQwIDc5LjE2MDQ1MSwgMjAxNy8wNS8wNi0wMTowODoyMSAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENDIDIwMTggKE1hY2ludG9zaCkiIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6OTk3MERBQzUwOTFDMTFFQTgwNDNDQkMwNjU0RTRFQTUiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6OTk3MERBQzYwOTFDMTFFQTgwNDNDQkMwNjU0RTRFQTUiPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDo5OTcwREFDMzA5MUMxMUVBODA0M0NCQzA2NTRFNEVBNSIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDo5OTcwREFDNDA5MUMxMUVBODA0M0NCQzA2NTRFNEVBNSIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/Pu9ZHw0AAA7ISURBVHja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') no-repeat;
+    background-size: 100% 100%;
+    background-color: #ffffff;
+    .tabbar-item{
+      width: calc(50% - 50rpx);
+      height: 100%;
+      padding-top: 14rpx;
+      box-sizing: border-box;
+    }
+    .tabbar-item:first-child{
+       padding-left: 88rpx;
+    }
+     .tabbar-item:last-child{
+        text-align:right;
+        padding-right: 88rpx;
+    }   
+    .scan-btn{
+      width:90rpx;
+      height: 90rpx;
+      position: fixed;
+      bottom: 27rpx;
+      left:50%;
+      transform:translateX(-50%);
+    }
+  }
+</style>
+<template>
+  <div class="main">
+    <div class="header" v-if="loaded">
+      <swiper
+        :indicator-dots="true"
+        :autoplay="true"
+        :interval="2000"                                        
+        style="height:310rpx;"
+      >    
+        <swiper-item v-for="(item,index) in adList" :key="index">
+          <image :src="item" class="slide-image" mode="aspectFit" />                      
+        </swiper-item>      
+      </swiper>
+    </div>
+    <block v-if="loaded">
+      <block v-if="true">
+        <div>
+          <div style="display:inline-block;float:left;margin-right:6rpx;">
+            <van-sidebar bind:change="onChangeSidebar">
+              <van-sidebar-item :title="item.name" v-for="item in classList" :key="item.id"/>            
+            </van-sidebar>
+          </div>
+          <div class="bg-fff" style="width:calc(100% - 185rpx);display:inline-block;height: calc(100vh - 566rpx);">
+            <scroll-view :scroll-y="true" style="width: 100%;height: 100%;">
+              <div class="product-item" v-for="(item,index) in productList" :key="index">
+                <div class="flex-box">
+                  <div style="padding-right:26rpx;" @click="navigateTo('/pages/productDetail/productDetail?id='+item.goods_id)">
+                      <image :src="baseUrl+item.mainimage" class="product-img"/>
+                  </div>
+                  <div style="flex:1;">
+                      <div class="font-28 color-151515" style="width:360rpx;" @click="navigateTo('/pages/productDetail/productDetail?id='+item.goods_id)">
+                        <div class="text-ellipsis">{{item.goodsname}}</div>
+                        <div class="text-ellipsis color-666 font-24"><span>规格：{{item.specval}}</span></div>
+                      </div>
+                      <div class="flex-box font-28 justify-between" style="width:100%;">
+                          <div @click="navigateTo('/pages/productDetail/productDetail?id='+item.goods_id)" class="font-24 text-ellipsis" style="width:172rpx;"><span class="color-FC3D41" style="margin-right:8rpx;">￥{{item.price}}</span>库存:{{item.num}}</div> 
+                          <div>
+                              <van-stepper
+                                  value="{{ item.cartnum }}"
+                                  integer
+                                  min="0" 
+                                  max="{{item.num}}"                               
+                                  step="1"
+                                  data-index="{{index}}"
+                                  bind:change="onChangeStepper"                              
+                              />
+                          </div>                      
+                      </div>
+                  </div>
+                </div>
+              </div>
+            </scroll-view>
+          </div>
+        </div>
+        <div class="submit-bar" style="bottom:120rpx;">
+          <div class="flex-box justify-between" @click="navigateTo('/pages/cart/cart')">
+            <div class="cart-icon">
+              <image src="../../images/cart-2.png" class="cart-img"/>
+              <div class="num">{{cartNum}}</div>
+            </div>
+            <div class="submit-btn">结算</div>
+          </div>
+        </div>
+      </block>
+      <block v-else>
+        <div style="width:432rpx;margin:0 auto;margin-top:100rpx;">
+          <image src="../../images/home-no-data.png" style="width:432rpx;height:236rpx;"/>
+          <div class="text-center font-26" style="padding:32rpx 23rpx;color:#A1A1A1;">
+            <text>尚未注册，注册后可扫码下单购买 前往个人中心注册</text>
+          </div>
+        </div>
+      </block>
+    </block>
+    <div class="tabbar" style="height:120rpx;">
+      <div class="flex-box justify-between" style="height: 100%;padding-bottom:20rpx;">
+        <div class="tabbar-item" @click="redirectTo('/pages/index/index')" style="padding-top:20rpx;">
+          <div>
+            <image src="../../images/home-1.png" style="width:52rpx;height: 50rpx;margin-left: 5rpx;vertical-align:top;"/>
+            <div style="color:#00F1D2;font-size:28rpx;">首页</div>
+          </div>
+        </div>
+        <div class="tabbar-item" @click="redirectTo('/pages/my/my')" style="padding-top:20rpx;">
+          <div>
+            <image src="../../images/my.png" style="width:44rpx;height: 50rpx;margin-right: 8rpx;vertical-align:top;"/>
+            <div style="color:#CECECE;font-size:28rpx;">我的</div>
+          </div>
+        </div>
+      </div>
+      <!-- <div class="scan-btn-box">
+        <div class="inner-box"></div>
+      </div> -->
+      <image src="../../images/scan-code.png" class="scan-btn" @click="scanCode"/>
+    </div>
+    <van-dialog id="van-dialog" />
+    <van-toast id="van-toast" />
+    <van-dialog
+      use-slot
+      title="登录授权"
+      show="{{ showMsgModal }}"
+      show-cancel-button      
+      confirm-button-open-type="getUserInfo"
+      bind:close="onClose"
+      bind:getuserinfo="onGotUserInfo"
+    >
+      <text>登录授权</text>
+    </van-dialog>
+  </div>
+</template>
+
+<script>
+  import wepy from '@wepy/core'
+  import eventHub from '../../common/eventHub';
+  import { mapState } from '@wepy/x';
+  import store from '../../store';
+  import testMixin from '../../mixins/test';
+  import http from '../../utils/request';
+  import Toast from '../../components/vant/toast/toast';
+  import Dialog from '../../components/vant/dialog/dialog';
+  var app=getApp();
+
+  wepy.page({
+    store,
+    config: {
+      navigationBarTitleText: '首页'
+    },
+
+    hooks: {
+      // Page 级别 hook, 只对当前 Page 的 setData 生效。
+      'before-setData': function (dirty) {
+       
+      }
+    },
+
+    mixins: [testMixin],
+
+    data: {
+      baseUrl:app.$wepy.$options.globalData.baseUrl,
+      productList:[],
+      adList:[],
+      classList: [],       
+      show:false,
+      showMsgModal:false,
+      showMenu:false,
+      cartNum:0,
+      name:'',
+      info:{},
+      classId:0,           
+      loaded:false,
+      loading: false,
+      nodata: false    
+    },    
+
+    methods: {
+      scanCode(){
+        wx.scanCode({
+          success (res) {
+            console.log(res)
+            if(res.path){
+              wx.reLaunch({
+                url:res.path
+              })
+            }
+          }
+        })
+      },
+      getOpenid(code,data){
+        http.get('api/schoolbox/GetUid',{code}).then(res=>{          
+          wx.setStorageSync('openid',res.data.openid);
+          this.userInfoUpdate({
+            nickname:data.$wx.detail.userInfo.nickName,
+            avatar:data.$wx.detail.userInfo.avatarUrl
+          })
+        })
+      },
+      onGotUserInfo(res){
+        console.log(res)
+        var that=this;
+        if (res.$wx.detail.errMsg === 'getUserInfo:ok') {
+          wx.login({
+            success:function(data){
+              console.log(data)
+              wx.setStorageSync('userInfo',JSON.stringify({
+                nickname:res.$wx.detail.userInfo.nickName,
+                avatar:res.$wx.detail.userInfo.avatarUrl
+              }));
+              that.getOpenid(data.code,res)
+            }
+          })
+        }        
+      },     
+      onChangeSidebar(e){
+        console.log(e)
+        var id = this.classList[e.$wx.detail].id;
+        this.getGoodsListByClass(id,true);
+      },
+      onChangeStepper(e){
+        let num=e.$wx.detail;  
+        let index = e.$wx.currentTarget.dataset.index;
+        let item = this.productList[index];           
+        if((item.cartnum||0) > num){
+          this.reduce(item)
+        }else if(item.cartnum < num){
+          this.plus(item)
+        }        
+      },                 
+      getCartProduct(){        
+        let openid=wx.getStorageSync('openid');
+        let shopbox_id=wx.getStorageSync('shopbox_id');
+        if(!openid){
+          return;
+        }
+        http.get(`api/schoolbox/getCartGoodsList`,{openid,shopbox_id},false).then(res=>{                        
+          this.cartNum = res.data.length;             
+        }).catch(res => {
+          if(res.code !=0){
+            Toast({ message: res.msg||'获取购物车商品失败', forbidClick:true,duration:1000}); 
+          }else{
+            this.cartNum = 0;
+          }
+        })
+      }, 
+      getindexadsimg(){
+        wx.showLoading({
+          title: '加载中...',
+          icon: 'none'
+        })
+        let shopbox_id=wx.getStorageSync('shopbox_id');
+        http.get('api/schoolbox/getindexadsimg',{shopbox_id},'',false).then(res=>{         
+          this.adList=res.data;                                                
+        })
+      },
+      getGoodsListByClass(id,flag=false){
+        this.classId=id;
+        let openid=wx.getStorageSync('openid');
+        let shopbox_id=wx.getStorageSync('shopbox_id');
+        http.get(`api/schoolbox/getGoodsListByClass`,{shopbox_id, goods_class_id:id,openid},'',flag).then(res=>{
+          wx.hideLoading()
+          this.productList=res.data; 
+          this.loaded=true;       
+          console.log(this.productList)         
+        })
+      },      
+      getGoodsClassList(cb){
+        let shopbox_id=wx.getStorageSync('shopbox_id');
+        http.get('api/schoolbox/getGoodsClassList',{shopbox_id},'',false).then(res=>{          
+           this.classList=res.data;
+          if(cb && typeof cb ==='function')  cb(res.data);        
+        })
+      },
+      plus(item){        
+        let openid=wx.getStorageSync('openid');
+        let shopbox_id=wx.getStorageSync('shopbox_id');
+        if(!openid){
+          return this.showMsgModal=true;
+        }  
+        let params ={
+          openid,
+          shopbox_id,
+          price:item.price,
+          goods_id:item.goods_id,          
+          specval:item.specval         
+        };
+        http.get(`api/schoolbox/addCart`,{...params}).then(res=>{                                             
+          this.getGoodsListByClass(this.classId); 
+          this.getCartProduct()        
+        }).catch(res => {
+          Toast({ message: res.msg||'添加失败', forbidClick:true,duration:1000}); 
+        })
+      },
+      reduce(item){
+        let openid=wx.getStorageSync('openid');
+        let shopbox_id=wx.getStorageSync('shopbox_id');
+        if(!openid){
+          return this.showMsgModal=true;
+        }  
+        let params ={
+          openid,
+          shopbox_id,         
+          goods_id:item.goods_id                  
+        };
+        http.get(`api/schoolbox/reduceCartGoods`,{...params}).then(res=>{                                            
+          this.getGoodsListByClass(this.classId); 
+          this.getCartProduct()        
+        }).catch(res => {
+          Toast({ message: res.msg||'删除失败', forbidClick:true,duration:1000});
+        })
+      },
+    },
+    onUnload(){
+      this.loaded=false;
+    },
+    onShow(){
+      let pages = getCurrentPages(); //页面栈
+      let beforePage = pages[pages.length - 1];
+    },
+    onLoad(options){       
+      wx.setStorageSync('shopbox_id',options.shopbox_id||options.scene||7);           
+      this.getindexadsimg();
+      this.getCartProduct();
+      this.getGoodsClassList(res => {
+        this.classId=res[0].id;
+        this.getGoodsListByClass(res[0].id)
+      })      
+      this.checkUserState(res=>{                    
+        if(res.msg !== "已经注册"){
+          Dialog.alert({        
+            message: '尚未注册，注册后可扫码下单购买 前往个人中心注册',
+            confirmButtonText:'好的',
+            closeOnClickOverlay:true
+          }).then(() => {
+            wx.redirectTo({
+              url:'/pages/register/register'
+            })
+          });
+        }  
+      })              
+    },
+    created () {
+      
+    }  
+  });
+</script>
+<config>
+{
+    navigationBarTitleText: '首页',
+    usingComponents: {
+      "van-stepper": "~@/components/vant/stepper/index",   
+      "van-icon": '~@/components/vant/icon/index',
+      "van-sidebar": "~@/components/vant/sidebar/index",
+      "van-sidebar-item": "~@/components/vant/sidebar-item/index",
+      "van-cell": "~@/components/vant/cell/index",
+      "van-cell-group": "~@/components/vant/cell-group/index",
+      "van-tabbar": "~@/components/vant/tabbar/index",
+      "van-tabbar-item": "~@/components/vant/tabbar-item/index",
+      "van-transition": "~@/components/vant/transition/index",
+      "van-overlay": "~@/components/vant/overlay/index",
+      "van-popup": "~@/components/vant/popup/index",     
+      "van-toast": "~@/components/vant/toast/index",
+      "van-dialog": "~@/components/vant/dialog/index",
+      "van-loading": "~@/components/vant/loading/index",
+    }
+}
+</config>

@@ -1,0 +1,408 @@
+<style lang="less"> 
+  .van-hairline--top-bottom::after {
+    border-width: 1px 0 0 0 !important;
+  }
+  .order-item{
+    margin-bottom: 10rpx;
+    padding:6rpx 24rpx;
+    background-color: #fff;
+    .order-title{
+      padding: 23rpx 0 21rpx 0;
+      height: 27rpx;
+      line-height: 27rpx;
+      font-size: 28rpx;
+      color:#131313;
+      position:relative;
+      &::after{
+        content:'';
+        position:absolute;
+        bottom: 0;
+        left: 21rpx;
+        width:calc(100% - 42rpx);
+        border-bottom: 1px solid #e8e8e8;
+        transform:scaleY(0.5);
+      }
+    }
+    .product-name{
+      display: inline-block;
+      width: 300rpx;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      overflow: hidden;
+    }
+  }
+  .order-bottom{
+    padding:16rpx 0;
+    position:relative;
+    &::after{
+      content:'';
+      position:absolute;
+      top: 0;
+      left: 10rpx;
+      width:calc(100% - 20rpx);
+      border-top: 1px solid #e8e8e8;
+      transform:scaleY(0.5);
+    }
+    .remove-btn{
+      width: 150rpx;
+      border:1rpx solid #FF5252;
+      border-radius: 30rpx;
+      color:#FF5252;
+      font-size:26rpx;
+      line-height:60rpx;
+      height: 60rpx;
+      text-align: center;
+    }
+    .add-cart-btn{
+      width: 150rpx;
+      color:#333;
+      font-size:26rpx;
+      line-height:60rpx;
+      height: 60rpx;
+      border-radius: 30rpx;
+      text-align: center;
+      background-color:#0DFFE0;
+      margin-left: 13rpx;
+    }    
+  }
+</style>
+<template>
+  <div class="main">
+    <block >      
+      <div class="bg-fff" style="height: 98rpx;margin-bottom:16rpx;">    
+        <van-tabs  bind:change="onChangeTab" color="#0DFFE0">
+            <van-tab title="全部"></van-tab>
+            <van-tab title="待付款"></van-tab>
+            <van-tab title="已完成"></van-tab>           
+          </van-tabs>                        
+      </div>       
+      <div class="order-list">
+        <div class="order-item" v-for="item in list" :key="item.id">
+          <div class="order-title">{{item.createtime}}</div>
+          <div class="p-tb-30">
+            <div class="flex-box font-26 color-131313 p-lr-24" style="height: 52rpx;" v-for="v in item.orderdesc" :key="v.id">
+              <div style="flex:2;"><text class="product-name">{{v.name}}</text><text style="margin-left:40rpx;">X{{v.num}}</text></div>
+              <div style="flex:1;padding-right: 46rpx;text-align:right;" class="font-24 color-343434 text-right">￥{{v.price}}</div>
+            </div>           
+          </div>
+          <div class="order-bottom">
+            <div class="flex-box" style="justify-content: space-between;">
+              <!-- <div class="color-999 font-24">上海政法大学 15号楼 506室</div> -->
+              <div class="color-999 font-24">{{item.address}}</div>
+              <div class="font-26">
+                <div class="flex-box">
+                  <div class="remove-btn" @click="remove(item.ordersn)">删除</div>
+                  <div class="add-cart-btn" @click="plus(item)" v-if="item.status == 0">加入购物车</div>
+                  <div class="add-cart-btn" v-if="item.status == 1" @click="navigateTo(`/pages/orderDetail/orderDetail?ordersn=${item.ordersn}`)">查看详情</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div> 
+        <block v-if="!total">
+          <div style="width:432rpx;margin:0 auto;margin-top:100rpx;">
+            <image src="../../images/home-no-data.png" style="width:432rpx;height:236rpx;"/>
+            <div class="text-center font-26" style="padding:32rpx 23rpx;color:#A1A1A1;">
+              <text>暂无相关的订单</text>
+            </div>
+          </div>
+        </block>
+        <div v-if="loading" class="text-center color-999" style="padding:20rpx 0;">
+          <van-loading  type="spinner" :size="20">加载中</van-loading>
+        </div>      
+        <div v-if="nodata" class="text-center color-999" style="padding:20rpx 0;">
+          <text style="margin-left:10px;font-size:28rpx;">没有更多数据</text>
+        </div>      
+      </div>           
+    </block>
+    <van-toast id="van-toast" /> 
+    <van-dialog id="van-dialog" />
+    <van-dialog
+      use-slot
+      title="登录授权"
+      show="{{ showMsgModal }}"
+      show-cancel-button      
+      confirm-button-open-type="getUserInfo"
+      bind:close="onClose"
+      bind:getuserinfo="onGotUserInfo"
+    >
+      <text>登录授权</text>
+    </van-dialog>
+  </div>
+</template>
+
+<script>
+  import wepy from '@wepy/core'
+  import eventHub from '../../common/eventHub';
+  import { mapState } from '@wepy/x';
+  import store from '../../store';
+  import testMixin from '../../mixins/test';
+  import http from '../../utils/request';
+  import Toast from '../../components/vant/toast/toast';
+  import Dialog from '../../components/vant/dialog/dialog';
+  var app=getApp();
+
+  wepy.page({
+    store,
+    config: {
+      navigationBarTitleText: '首页'
+    },
+
+    hooks: {
+      // Page 级别 hook, 只对当前 Page 的 setData 生效。
+      'before-setData': function (dirty) {
+       
+      }
+    },
+
+    mixins: [testMixin],
+
+    data: {
+      showMsgModal:false,
+      list:[], 
+      index:0, 
+      params:{
+        page:1
+      },
+      total:0,
+      loaded:false,
+      loading: false,
+      nodata: false    
+    },    
+
+    methods: {
+      getOpenid(code,data){
+        http.get('api/schoolbox/GetUid',{code}).then(res=>{          
+          wx.setStorageSync('openid',res.data.openid);
+          this.userInfoUpdate({
+            nickname:data.$wx.detail.userInfo.nickName,
+            avatar:data.$wx.detail.userInfo.avatarUrl
+          })
+        })
+      },
+      onGotUserInfo(res){
+        console.log(res)
+        var that=this;
+        if (res.$wx.detail.errMsg === 'getUserInfo:ok') {
+          wx.login({
+            success:function(data){
+              console.log(data)
+              that.getOpenid(data.code,res)
+            }
+          })
+        }        
+      },
+      getAllOrder(cb,flag=true){
+        let openid=wx.getStorageSync('openid');
+        if(!openid) return; 
+        http.get('api/schoolbox/getAllOrder',{...this.params,openid},flag).then(res=>{
+          //this.list=res.data.data;
+          res.data.data.forEach(item => {
+            item.createtime=this.date(item.createtime);
+          })
+          this.total = res.data.total;
+          if(cb && typeof cb === 'function') cb(res.data.data);
+        }).catch(res=>{
+          this.list=[];
+          if(res.code !=0){
+            Toast({ message: res.msg, forbidClick:true});
+          }
+        })
+      },
+      getNoPayOrder(cb,flag=true){
+        let openid=wx.getStorageSync('openid');
+        if(!openid) return; 
+        http.get('api/schoolbox/getNoPayOrder',{...this.params,openid},flag).then(res=>{
+          //this.list=res.data.data;
+          res.data.data.forEach(item => {
+            item.createtime=this.date(item.createtime);
+          })
+          this.total = res.data.total;
+          if(cb && typeof cb === 'function') cb(res.data.data);
+        }).catch(res=>{
+          this.list=[];
+          if(res.code !=0){
+            Toast({ message: res.msg, forbidClick:true});
+          }
+        })
+      },
+      getPayedOrder(cb,flag=true){
+        let openid=wx.getStorageSync('openid');
+        if(!openid) return; 
+        http.get('api/schoolbox/getPayedOrder',{...this.params,openid},flag).then(res=>{
+          //this.list=res.data.data;
+          res.data.data.forEach(item => {
+            item.createtime=this.date(item.createtime);
+          })
+          this.total = res.data.total;
+          if(cb && typeof cb === 'function') cb(res.data.data);
+        }).catch(res=>{
+          console.log(res)
+          this.list=[];
+          if(res.code !=0){
+            Toast({ message: res.msg, forbidClick:true});
+          }
+        })
+      },  
+      deleteMyOrder(ordersn){        
+        http.get('api/schoolbox/deleteMyOrder',{ordersn}).then(res=>{
+          Toast({ message: '删除成功', forbidClick:true});
+          setTimeout(()=>{
+            this.params.page=1;
+            if(this.index ==0){
+              this.getAllOrder(res=>{
+                this.list=res;
+              });
+            }else if(this.index ==1){
+              this.getNoPayOrder(res=>{
+                this.list=res;
+              });
+            }else{
+              this.getPayedOrder(res=>{
+                this.list=res;
+              });
+            }
+          },1500)
+        }).catch(res=>{
+          Toast({ message: res.msg, forbidClick:true});
+        })
+      },    
+      onChangeTab(e){
+        console.log(e)
+        this.index= e.$wx.detail.index;
+        this.params.page=1;
+        if(this.index ==0){
+          this.getAllOrder(res=>{
+            this.list=res;
+          });
+        }else if(this.index ==1){
+          this.getNoPayOrder(res=>{
+            this.list=res;
+          });
+        }else{
+          this.getPayedOrder(res=>{
+            this.list=res;
+          });
+        }
+      },         
+      remove(id){         
+        Dialog.alert({        
+          message: '确认删除此订单？',
+          confirmButtonText:'确定',         
+          showCancelButton:true
+        }).then(() => {
+          this.deleteMyOrder(id);
+        });    
+      },
+      plus(obj){        
+        let openid=wx.getStorageSync('openid');
+        let shopbox_id=wx.getStorageSync('shopbox_id');
+        if(!openid){
+          return this.showMsgModal=true;
+        }  
+        obj.orderdesc.forEach(item => {
+          let params ={
+            openid,
+            shopbox_id,
+            price:item.price,
+            goods_id:item.goods_id,          
+            specval:item.specval         
+          };
+          http.get(`api/schoolbox/addCart`,{...params}).then(res=>{                                             
+            Toast({ message: '添加成功', forbidClick:true,duration:1000});
+          }).catch(res => {
+            Toast({ message: res.msg||'添加失败', forbidClick:true,duration:1000}); 
+          })
+        })        
+      },     
+      onGotUserInfo(res){
+        console.log(res)
+        var that=this;
+        if (res.$wx.detail.errMsg === 'getUserInfo:ok') {
+          wx.login({
+            success:function(data){
+              console.log(data)
+              wx.setStorageSync('userInfo',JSON.stringify({
+                nickname:res.$wx.detail.userInfo.nickName,
+                avatar:res.$wx.detail.userInfo.avatarUrl
+              }));
+              that.getOpenid(data.code,res)
+            }
+          })
+        }        
+      }
+    },
+    onLoad(){        
+      this.getAllOrder(res=>{
+        this.list=res;
+      });          
+    },
+    created () {
+      
+    },
+
+    //上拉加载更多数据
+    onReachBottom(e) {
+      this.loading= true;
+      this.nodata= false;
+      // 在这里加载新的数据
+      this.params.page++;
+      if(this.index ==0){
+        this.getAllOrder((data)=>{
+          setTimeout(()=>{
+            if(data&&data.length){
+              this.list=this.list.concat(data);
+              this.loading=false;
+            }else{
+              this.loading=false;
+              this.nodata=true;
+            }
+          },1000)
+        },false);
+      }else if(this.index ==1){
+        this.getNoPayOrder((data)=>{
+          setTimeout(()=>{
+            if(data&&data.length){
+              this.list=this.list.concat(data);
+              this.loading=false;
+            }else{
+              this.loading=false;
+              this.nodata=true;
+            }
+          },1000)
+      },false);
+      }else{
+        this.getPayedOrder((data)=>{
+          setTimeout(()=>{
+            if(data&&data.length){
+              this.list=this.list.concat(data);
+              this.loading=false;
+            }else{
+              this.loading=false;
+              this.nodata=true;
+            }
+          },1000)
+        },false);
+      }
+    }
+  });
+</script>
+<config>
+{
+    navigationBarTitleText: '订单',
+    usingComponents: {
+      "van-icon": '~@/components/vant/icon/index',
+      "van-tab": '~@/components/vant/tab/index',
+      "van-tabs": '~@/components/vant/tabs/index',
+      "van-sticky": '~@/components/vant/sticky/index',    
+      "van-cell": "~@/components/vant/cell/index",
+      "van-cell-group": "~@/components/vant/cell-group/index",
+      "van-tabbar": "~@/components/vant/tabbar/index",
+      "van-tabbar-item": "~@/components/vant/tabbar-item/index",      
+      "van-popup": "~@/components/vant/popup/index",      
+      "van-toast": "~@/components/vant/toast/index",
+      "van-dialog": "~@/components/vant/dialog/index",
+      "van-loading": "~@/components/vant/loading/index",
+    }
+}
+</config>

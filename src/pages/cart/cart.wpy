@@ -1,0 +1,464 @@
+<style lang="less">
+  .header{
+    height: 70rpx;
+    line-height: 70rpx;
+    font-size: 26rpx;
+    color:#333;
+    text-align: right;
+    padding: 0 24rpx;
+    background-color: #ffffff;
+    position: relative;
+    &::after{
+        content: '';
+        position: absolute;
+        width: 100%;
+        height: 1rpx;
+        bottom: 0;
+        left: 0;
+        border-bottom: 1px solid #e8e8e8;
+        transform: scaleY(0.5);
+    }
+    &::before{
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 1rpx;
+        border-bottom: 1px solid #e8e8e8;
+        transform: scaleY(0.5);
+    }
+  }
+  .cart-list{
+        background-color: #ffffff;
+        .list-item{
+            padding: 36rpx 24rpx 14rpx;
+            .address-icon{
+                width: 34rpx;
+                height: 34rpx;
+                margin-right: 18rpx;
+            }
+        }
+    .product-item{
+        display: flex;
+        align-items: center;
+        padding: 30rpx 0;
+        width: 100%;        
+        .product-img{
+            width: 120rpx;
+            height: 120rpx;
+            border-radius: 6rpx;
+        }
+    }
+  }
+.cart-checkbox {
+    display: inline-block;    
+    width:32rpx;
+    height:32rpx;
+    background-size: 100% 100%;
+    background-image: url('data:image/png;base64,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');
+}
+
+.cart-checkbox.active {  
+    width: 32rpx;
+    height: 32rpx;
+    background-image: url('data:image/png;base64,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');
+}
+  .submit-bar{
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 90rpx;
+      line-height: 90rpx;
+      background-color: #ffffff;
+      padding-left: 24rpx;
+      box-sizing: border-box;
+      z-index:99;
+  }
+  .ml18{
+      margin-left: 18rpx;
+  }
+  .submit-btn{
+      min-width: 168rpx;
+      line-height: 90rpx;
+      text-align: center;
+      background-color: #0DFFE0;
+      color:#333;
+      padding: 0 35rpx;
+      font-size: 30rpx;
+      box-sizing: border-box;
+      margin-left: 18rpx;
+  }
+</style>
+<template>
+  <div class="main" style="padding-bottom:100rpx;">    
+    <block v-if="cart_list&&cart_list.length">  
+        <div class="header">
+            <text class="color-primary" v-if="isEdit" @click="isEdit=false;">完成</text>
+            <text @click="isEdit=true;" v-else>编辑</text>
+        </div>              
+        <div class="cart-list">
+          <div class="list-item" v-for="(item,index) in cart_list" :key="item.id">
+            <div class="flex-box">
+                <image class="address-icon" src="../../images/dingwei.png"/>
+                <text class="font-28 color-333">{{item.address}}</text>
+            </div>
+            <div class="product-item" >
+                <div style="height:120rpx;padding-right:34rpx;" class="flex-box" @click="selectProduct(index,item.id)">
+                    <div class="cart-checkbox {{item.active?'active':''}}"></div>                           
+                </div>
+                <div style="padding-right:26rpx;">
+                    <image :src="baseUrl+item.mainimage" class="product-img"/>
+                </div>
+                <div style="flex:1;">
+                    <div class="font-28 color-151515 mb20">{{item.name}}</div>
+                    <div class="flex-box font-28 justify-between" style="width:100%;">
+                        <div class="color-FC3D41">￥{{item.price}}<text class="font-26 ml24 color-131313">X{{item.num}}</text></div>
+                        <div>
+                            <van-stepper
+                                value="{{ item.num }}"
+                                integer
+                                min="1" 
+                                max="{{item.kcnum}}"                              
+                                step="1"
+                                data-index="{{index}}"
+                                bind:change="onChangeStepper"                              
+                            />
+                        </div>
+                    </div>
+                </div>
+            </div>          
+          </div>
+        </div>
+    </block>
+    <block v-else>
+      <div style="width:380rpx;height:270rpx;margin:114rpx auto 0;">
+          <image src="../../images/no-data.png" style="width:100%;height:100%;"/>
+      </div>
+    </block>
+    <block  v-if="cart_list.length">
+      <div class="submit-bar">
+          <div class="flex-box">
+              <div style="flex:1;">
+                <div class="flex-box" @click="selectAll">
+                    <div class="cart-checkbox {{cart_check_all?'active':''}}"></div>
+                    <text class="ml18">全选</text>
+                </div>
+              </div>
+              <div style="flex:2;">
+                <div class="flex-box justify-end">
+                    <div class="flex" style="line-height:normal;" v-if="!isEdit">
+                        <div class="font-26 color-666">合计：</div>
+                        <div>
+                            <div class="font-26 color-F74D4A">￥{{totalPrice}}</div>                          
+                        </div>
+                    </div>
+                    <div class="submit-btn" v-if="!isEdit" @click="submit">结算({{selectNum}})</div>
+                    <div class="submit-btn" v-else @click="remove">删除</div>
+                </div>
+              </div>
+          </div>
+      </div>
+    </block> 
+    <van-dialog id="van-dialog" />
+    <van-toast id="van-toast" />
+  </div>
+</template>
+
+<script>
+  import wepy from '@wepy/core'
+  import eventHub from '../../common/eventHub';
+  import { mapState } from '@wepy/x';
+  import store from '../../store';
+  import testMixin from '../../mixins/test';
+  import http from '../../utils/request';
+  import Toast from '../../components/vant/toast/toast';
+  import Dialog from '../../components/vant/dialog/dialog';
+  var app=getApp();
+
+  wepy.page({
+    store,
+    config: {
+      navigationBarTitleText: 'test'
+    },
+
+    hooks: {
+      // Page 级别 hook, 只对当前 Page 的 setData 生效。
+      'before-setData': function (dirty) {
+        
+      }
+    },
+
+ 
+
+    mixins: [testMixin],
+
+    data: {
+      baseUrl:app.$wepy.$options.globalData.baseUrl,
+      isEdit:false,
+      selectNum:0,
+      cart_check_all:false,
+      cart_list:[],
+      selectList:[],
+      totalPrice:0    
+    },
+
+    methods: {
+      onUnload:function(){
+        let pages = getCurrentPages(); //页面栈
+        let beforePage = pages[pages.length - 2];       
+        wx.redirectTo({
+            url:'/'+ beforePage.route,
+            success:function(){
+                if(beforePage.route == 'pages/Shouye/shouye'){
+                    beforePage.onLoad(beforePage.options)
+                }
+            }
+        })
+      },
+      onChangeStepper(e){
+        let num=e.$wx.detail;  
+        let index = e.$wx.currentTarget.dataset.index;
+        let item = this.cart_list[index];       
+        if(item.num > num){
+          this.reduce(item)
+        }else if(item.num < num){
+          this.plus(item)
+        }  
+      },
+      onChangeTabbar(e){
+        if(e.$wx.detail==0){
+          wx.redirectTo({
+            url:'/pages/index/index'
+          })
+        }else if(e.$wx.detail==1){
+          wx.redirectTo({
+            url:'/pages/find/find'
+          })
+        }else{
+          wx.redirectTo({
+            url:'/pages/my/my'
+          })
+        }
+      },
+      getOpenid(code,data){
+        http.get('api/schoolbox/GetUid',{code}).then(res=>{          
+          wx.setStorageSync('openid',res.data.openid);
+          this.userInfoUpdate({
+            nickname:data.$wx.detail.userInfo.nickName,
+            avatar:data.$wx.detail.userInfo.avatarUrl
+          })
+        })
+      },
+      onGotUserInfo(res){
+        console.log(res)
+        var that=this;
+        if (res.$wx.detail.errMsg === 'getUserInfo:ok') {
+          wx.login({
+            success:function(data){
+              console.log(data)
+              wx.setStorageSync('userInfo',JSON.stringify({
+                nickname:res.$wx.detail.userInfo.nickName,
+                avatar:res.$wx.detail.userInfo.avatarUrl
+              }));
+              that.getOpenid(data.code,res)
+            }
+          })
+        }        
+      },
+      getCartProduct(){        
+        let openid=wx.getStorageSync('openid');
+        if(!openid) return;
+        let shopbox_id=wx.getStorageSync('shopbox_id');
+        http.get(`api/schoolbox/getCartGoodsList`,{openid,shopbox_id},false).then(res=>{ 
+          this.totalPrice =0;                                        
+          if(res.data){
+            res.data.forEach(item => {
+              this.totalPrice += item.price*item.num;
+              item.active = true;
+            }) 
+            this.cart_list = res.data; 
+            this.calcSelectNum();
+          }
+          this.totalPrice= this.totalPrice.toFixed(2);            
+        }).catch(res => {
+          if(res.code !=0){
+            Toast({ message: res.msg||'获取购物车商品失败',forbidClick:true,duration:1000});
+          }else{
+            this.cart_list = []; 
+            this.calcSelectNum();
+          } 
+        })
+      },
+      calcSelectNum(){
+        let count = 0,list = [];
+        this.cart_list.forEach(item => {
+          if(item.active){
+            count++;
+            list.push(item)
+          }
+        })
+        this.selectList = list;
+        this.selectNum= count;
+        this.cart_check_all = (this.cart_list.length === count);
+      },
+      calcTotalPrice(){
+        this.totalPrice =0;                                        
+        if(this.cart_list && this.cart_list.length){
+          this.cart_list.forEach(item => {
+            if(item.active){
+              this.totalPrice += item.price*item.num;
+            }            
+          })         
+        }
+        this.totalPrice= this.totalPrice.toFixed(2);
+      },
+      selectProduct(index,id){
+        this.cart_list[index].active= !this.cart_list[index].active;
+        this.calcSelectNum();
+        this.calcTotalPrice();
+      },
+      selectAll(){ 
+        let len = this.cart_list.filter(v => v.active).length;          
+        if(len == this.cart_list.length){
+          this.cart_list.forEach(item=>{
+            item.active=false;
+          })
+        }else{
+          this.cart_list.forEach(item=>{
+            item.active=true;
+          })
+        }
+        this.calcSelectNum();
+        this.calcTotalPrice();
+      },
+      plus(item){        
+        let openid=wx.getStorageSync('openid');
+        let shopbox_id=wx.getStorageSync('shopbox_id');
+        if(!openid){
+          return this.showMsgModal=true;
+        }  
+        let params ={
+          openid,
+          shopbox_id,
+          price:item.price,
+          goods_id:item.goods_id,          
+          specval:item.specval         
+        };
+        http.get(`api/schoolbox/addCart`,{...params}).then(res=>{                                             
+          this.getCartProduct();         
+        }).catch(res => {
+          Toast({ message: res.data.msg||'添加失败', forbidClick:true,duration:1000}); 
+        })
+      },
+      reduce(item){
+        let openid=wx.getStorageSync('openid');
+        let shopbox_id=wx.getStorageSync('shopbox_id');
+        if(!openid){
+          return this.showMsgModal=true;
+        }  
+        let params ={
+          openid,
+          shopbox_id,         
+          goods_id:item.goods_id                  
+        };
+        http.get(`api/schoolbox/reduceCartGoods`,{...params}).then(res=>{                                            
+          this.getCartProduct();         
+        }).catch(res => {
+          Toast({ message: res.data.msg||'失败', forbidClick:true,duration:1000}); 
+        })
+      },
+      getProductId(list){
+        let arr=[];
+        list.forEach(item=>{
+          arr.push(item.id)
+        })
+        return arr.join(',');
+      },
+      delProduct(){
+        let openid=wx.getStorageSync('openid');
+        let shopbox_id=wx.getStorageSync('shopbox_id');
+        if(!openid){
+          return this.showMsgModal=true;
+        }  
+        let params ={
+          openid,
+          shopbox_id,
+          cart_id_array: this.getProductId(this.selectList)        
+        };       
+        http.get(`api/schoolbox/deleteCartGoods`,{...params}).then(res=>{                                   
+          //Toast({ message: '添加成功', forbidClick:true,duration:1000});
+          this.getCartProduct();    
+        }).catch(res => {
+          Toast({ message: res.data.msg||'失败', forbidClick:true,duration:1000});
+        })
+      },
+      remove(){
+        Dialog.alert({        
+          message: '确认删除此订单？',
+          confirmButtonText:'确定',         
+          showCancelButton:true
+        }).then(() => {
+          this.delProduct();
+        });
+      },
+      submit(){
+        // let params ={
+        //   //num:this.num,
+        //   // goods:JSON.stringify([{goods_id:this.info.goods_id,num:this.info.num,price:this.info.price,specval:this.info.specval}]),
+        //    goods:this.selectList,
+        //   je:this.totalPrice
+        // };        
+        if(!this.selectList.length){
+          Toast({ message: '请选择要结算的商品', forbidClick:true,duration:1000});
+          return;
+        }
+        let arr=[],num=0;
+        this.selectList.forEach(item=>{
+          arr.push({
+            goods_id:item.goods_id,
+            num:item.num,
+            price:item.price,
+            specval:item.specval
+          })
+          num += (item.num-0);
+        })
+        let shopbox_id=wx.getStorageSync('shopbox_id');
+        let params ={
+          shopbox_id,
+          num:num,
+          goods:arr,         
+          je:this.totalPrice
+        };
+        let openid=wx.getStorageSync('openid');
+        if(!openid){
+          return this.showMsgModal=true;
+        }
+        http.get('api/schoolbox/ordersubmit',{...params,openid}).then(res=>{                                  
+          this.navigateTo('/pages/settlement/settlement?ordersn='+res.data.ordersn+'&je='+this.totalPrice);      
+        })
+      }   
+    },
+    created () {
+     this.getCartProduct();
+    }
+  });
+</script>
+<config>
+{
+    navigationBarTitleText: '购物车',
+    usingComponents: {
+      "van-button": '~@/components/vant/button/index',       
+      "van-icon": '~@/components/vant/icon/index',
+      "van-divider": '~@/components/vant/divider/index',
+      "van-cell": "~@/components/vant/cell/index",
+      "van-cell-group": "~@/components/vant/cell-group/index",
+      "van-stepper": "~@/components/vant/stepper/index",
+      "van-checkbox": "~@/components/vant/checkbox/index",
+      "van-submit-bar": "~@/components/vant/submit-bar/index",
+      "van-toast": "~@/components/vant/toast/index",
+      "van-dialog": "~@/components/vant/dialog/index"    
+    }
+}
+</config>

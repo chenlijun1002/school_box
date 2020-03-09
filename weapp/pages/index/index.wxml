@@ -1,0 +1,84 @@
+
+<view class="main">
+  <view wx:if="{{ loaded }}" class="header">
+    <swiper indicator-dots="{{ true }}" autoplay="{{ true }}" interval="{{ 2000 }}" style="height:310rpx;">    
+      <swiper-item wx:for="{{ adList }}" wx:for-index="index" wx:for-item="item" wx:key="index" key="{{ index }}">
+        <image src="{{ item }}" mode="aspectFit" class="slide-image"></image>                      
+      </swiper-item>      
+    </swiper>
+  </view>
+  <block wx:if="{{ loaded }}">
+    <block wx:if="{{ true }}">
+      <view>
+        <view style="display:inline-block;float:left;margin-right:6rpx;">
+          <van-sidebar bind_init="_initComponent" data-wpy-evt="7-0" bindchange="_proxy">
+            <van-sidebar-item bind_init="_initComponent" title="{{ item.name }}" wx:for="{{ classList }}" wx:for-index="index" wx:for-item="item" wx:key="index" key="{{ item.id }}"></van-sidebar-item>            
+          </van-sidebar>
+        </view>
+        <view style="width:calc(100% - 185rpx);display:inline-block;height: calc(100vh - 566rpx);" class="bg-fff">
+          <scroll-view scroll-y="{{ true }}" style="width: 100%;height: 100%;">
+            <view wx:for="{{ productList }}" wx:for-index="index" wx:for-item="item" wx:key="index" key="{{ index }}" class="product-item">
+              <view class="flex-box">
+                <view data-wpy-evt="7-1" bindtap="_proxy" data-wpytap-a="{{ item }}" style="padding-right:26rpx;">
+                    <image src="{{ baseUrl+item.mainimage }}" class="product-img"></image>
+                </view>
+                <view style="flex:1;">
+                    <view data-wpy-evt="7-2" bindtap="_proxy" data-wpytap-a="{{ item }}" style="width:360rpx;" class="font-28 color-151515">
+                      <view class="text-ellipsis">{{item.goodsname}}</view>
+                      <view class="text-ellipsis color-666 font-24"><label>规格：{{item.specval}}</label></view>
+                    </view>
+                    <view style="width:100%;" class="flex-box font-28 justify-between">
+                        <view data-wpy-evt="7-3" bindtap="_proxy" data-wpytap-a="{{ item }}" style="width:172rpx;" class="font-24 text-ellipsis"><label style="margin-right:8rpx;" class="color-FC3D41">￥{{item.price}}</label>库存:{{item.num}}</view> 
+                        <view>
+                            <van-stepper bind_init="_initComponent" value="{{ item.cartnum }}" integer="" min="0" max="{{item.num}}" step="1" data-index="{{index}}" data-wpy-evt="7-4" bindchange="_proxy"></van-stepper>
+                        </view>                      
+                    </view>
+                </view>
+              </view>
+            </view>
+          </scroll-view>
+        </view>
+      </view>
+      <view style="bottom:120rpx;" class="submit-bar">
+        <view data-wpy-evt="7-5" bindtap="_proxy" class="flex-box justify-between">
+          <view class="cart-icon">
+            <image src="../../images/cart-2.png" class="cart-img"></image>
+            <view class="num">{{cartNum}}</view>
+          </view>
+          <view class="submit-btn">结算</view>
+        </view>
+      </view>
+    </block>
+    <block wx:else>
+      <view style="width:432rpx;margin:0 auto;margin-top:100rpx;">
+        <image src="../../images/home-no-data.png" style="width:432rpx;height:236rpx;"></image>
+        <view style="padding:32rpx 23rpx;color:#A1A1A1;" class="text-center font-26">
+          <text>尚未注册，注册后可扫码下单购买 前往个人中心注册</text>
+        </view>
+      </view>
+    </block>
+  </block>
+  <view style="height:120rpx;" class="tabbar">
+    <view style="height: 100%;padding-bottom:20rpx;" class="flex-box justify-between">
+      <view data-wpy-evt="7-6" bindtap="_proxy" style="padding-top:20rpx;" class="tabbar-item">
+        <view>
+          <image src="../../images/home-1.png" style="width:52rpx;height: 50rpx;margin-left: 5rpx;vertical-align:top;"></image>
+          <view style="color:#00F1D2;font-size:28rpx;">首页</view>
+        </view>
+      </view>
+      <view data-wpy-evt="7-7" bindtap="_proxy" style="padding-top:20rpx;" class="tabbar-item">
+        <view>
+          <image src="../../images/my.png" style="width:44rpx;height: 50rpx;margin-right: 8rpx;vertical-align:top;"></image>
+          <view style="color:#CECECE;font-size:28rpx;">我的</view>
+        </view>
+      </view>
+    </view>
+    
+    <image src="../../images/scan-code.png" data-wpy-evt="7-8" bindtap="_proxy" class="scan-btn"></image>
+  </view>
+  <van-dialog bind_init="_initComponent" id="van-dialog"></van-dialog>
+  <van-toast bind_init="_initComponent" id="van-toast"></van-toast>
+  <van-dialog bind_init="_initComponent" use-slot="" title="登录授权" show="{{ showMsgModal }}" show-cancel-button="" confirm-button-open-type="getUserInfo" data-wpy-evt="7-9" bindclose="_proxy" bindgetuserinfo="_proxy">
+    <text>登录授权</text>
+  </van-dialog>
+</view>

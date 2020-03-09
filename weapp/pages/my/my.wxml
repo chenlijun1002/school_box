@@ -1,0 +1,62 @@
+
+<view class="main">
+  <view class="header"></view>
+  <view class="user-info-box">
+    <van-cell bind_init="_initComponent" border="{{ false }}" is-link="{{ true }}">
+      <view slot="title" class="flex-box">
+        <image src="{{ userInfo.avatar }}" class="user-img"></image>
+        <button open-type="getUserInfo" data-wpy-evt="10-0" bindgetuserinfo="_proxy" style="position:absolute;top:0;left:0;width:100%;height:100%;opacity:0;z-index:10;"></button>
+        <view wx:if="{{ isRegister }}" style="height: 112rpx;padding-left: 40rpx;padding-top: 18rpx;box-sizing: border-box;">
+          <view>{{userInfo.nickname}}</view>
+          <view style="position: relative;width: 95rpx;height: 41rpx;line-height: 41rpx;" class="font-24 mt5 text-center">
+            <image src="../../images/no-register.png" style="position: absolute;left:0;top:0;width: 95rpx;height: 41rpx;"></image>              
+            <text style="color:#a6a6a6;position: relative;z-index: 1;">未注册</text>
+          </view>
+        </view>
+        <view wx:else style="height: 112rpx;padding-left: 40rpx;padding-top: 18rpx;box-sizing: border-box;">
+          <view>{{userInfo.nickname}}</view>
+          <view style="position: relative;width: 95rpx;height: 41rpx;line-height: 41rpx;" class="font-24 mt5 text-center">
+            <image src="../../images/register.png" style="position: absolute;left:0;top:0;width: 95rpx;height: 41rpx;"></image>              
+            <text style="color:#fff;position: relative;z-index: 1;">已注册</text>
+          </view>
+        </view>
+      </view>
+    </van-cell>
+  </view>
+  <view style="margin-top: 10rpx;">
+    <van-cell bind_init="_initComponent" title="我的订单" is-link="{{ true }}" border="{{ false }}" title-class="font-30" data-wpy-evt="10-1" bindtap="_proxy">
+      <image src="../../images/order.png" slot="icon" style="width:34rpx;height: 34rpx;margin-right: 24rpx;"></image>
+    </van-cell>
+    <van-cell bind_init="_initComponent" title="购物车" is-link="{{ true }}" border="{{ false }}" title-class="font-30" data-wpy-evt="10-2" bindtap="_proxy">
+      <image src="../../images/cart.png" slot="icon" style="width:34rpx;height: 34rpx;margin-right: 24rpx;"></image>
+    </van-cell>
+    <van-cell bind_init="_initComponent" title="在线客服" is-link="{{ true }}" border="{{ false }}" title-class="font-30">
+      <image src="../../images/kefu.png" slot="icon" style="width:34rpx;height: 34rpx;margin-right: 24rpx;"></image>
+      <button open-type="contact" style="position:absolute;top:0;left:0;width:100%;height:100%;opacity:0;"></button>
+    </van-cell>
+    <van-cell bind_init="_initComponent" title="申请盒子" is-link="{{ true }}" border="{{ false }}" title-class="font-30" data-wpy-evt="10-3" bindtap="_proxy">
+      <image src="../../images/box.png" slot="icon" style="width:34rpx;height: 34rpx;margin-right: 24rpx;"></image>
+    </van-cell>
+  </view>
+  
+  <view style="height:120rpx;" class="tabbar">
+    <view style="height: 100%;padding-bottom:20rpx;" class="flex-box justify-between">
+      <view data-wpy-evt="10-4" bindtap="_proxy" style="padding-top:20rpx;" class="tabbar-item">
+        <view>
+          <image src="../../images/home.png" style="width:52rpx;height: 50rpx;margin-left: 5rpx;vertical-align:top;"></image>
+          <view style="color:#CECECE;font-size:28rpx;">首页</view>
+        </view>
+      </view>
+      <view data-wpy-evt="10-5" bindtap="_proxy" style="padding-top:20rpx;" class="tabbar-item">
+        <view>
+          <image src="../../images/my-1.png" style="width:44rpx;height: 50rpx;margin-right: 8rpx;vertical-align:top;"></image>
+          <view style="color:#00F1D2;font-size:28rpx;">我的</view>
+        </view>
+      </view>
+    </view>
+    
+    <image src="../../images/scan-code.png" data-wpy-evt="10-6" bindtap="_proxy" class="scan-btn"></image>
+  </view>
+   <van-toast bind_init="_initComponent" id="van-toast"></van-toast> 
+   <van-dialog bind_init="_initComponent" id="van-dialog"></van-dialog>
+</view>

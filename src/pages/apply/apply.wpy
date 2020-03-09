@@ -1,0 +1,392 @@
+<style lang="less"> 
+  .header{
+    position:absolute;
+    top:0;
+    left: 0;
+    width: 100%;
+    height: 447rpx;
+    background: #0DFFE0;
+    z-index: -1;
+  }
+  .main{
+    background:#fff;
+    border-radius:14rpx;
+    margin-top: 78rpx;
+    overflow: hidden;
+  }
+  .cell-title{
+    font-size:32rpx;
+    color:#1A1A1A;
+  }
+  .van-cell{
+    padding:32rpx 30rpx !important;
+    &::after{    
+      width: calc(100% - 30px);
+    }
+  }
+  .select-arrow{
+    width: 22rpx;
+    height: 22rpx;
+    margin-left: 20rpx;
+  }
+  .color-1A1A1A{
+    color:#1A1A1A !important;
+  }
+  .input-title{
+    padding: 20rpx 40rpx 0 40rpx;
+  }
+  .van-field__input{
+    padding:0 10rpx !important;
+  }
+  .send-code{
+    padding:0 14rpx;
+    border:1rpx solid #333;
+    height: 52rpx;
+    line-height: 52rpx;
+    border-radius: 26rpx;
+    text-align: center;
+    font-size: 24rpx;
+    color:#323232;
+  }
+  .radio-icon{
+    width:32rpx;
+    height: 32rpx;
+  }
+  .submit-btn{
+    color:#333;
+    font-size:32rpx;
+    height: 88rpx;
+    line-height:88rpx;
+    text-align:center;
+    border-radius:44rpx;
+    background: #0DFFE0;
+  }
+</style>
+<template>
+  <div class="container" style="padding-bottom: 40rpx;">
+    <div class="header"></div>
+    <div class="main">
+      <div>
+        <van-cell :border="false" custom-style="padding:24px 15px 0 20px !important;">
+          <div slot="title" class="font-30 color-999">欢迎注册</div>
+        </van-cell>
+      </div>
+      <div class="custom-cell">
+        <van-cell>
+          <div slot="title" class="cell-title p-lr-10">            
+            <picker bindchange="bindPickerChange" range="{{array}}" style="display:inline !important;">              
+              <text>{{school||'请选择学校'}}</text>
+              <image class="select-arrow" src="../../images/select-arrow.png"/>
+            </picker>            
+          </div>
+        </van-cell>
+      </div>      
+      <div class="custom-cell">
+        <van-cell>
+          <div slot="title" class="cell-title p-lr-10">
+            <picker bindchange="bindPickerChange2" range="{{array2}}" style="display:inline !important;">              
+              <text>{{louno||'请选择寝室'}}</text>
+              <image class="select-arrow" src="../../images/select-arrow.png"/>
+            </picker>            
+          </div>
+        </van-cell>
+      </div>
+      <div class="font-32 color-1A1A1A bg-fff input-title">寝室号</div>
+      <div>
+        <van-field
+          value="{{ params.dormitory }}"
+          placeholder="请输入寝室号"         
+          bind:change="onChange"
+           data-name="dormitory"
+          input-class="color-1A1A1A"
+        />
+      </div>
+      <div class="font-32 color-1A1A1A bg-fff input-title">姓名</div>
+      <div>
+        <van-field
+          value="{{ params.name }}"
+          placeholder="请输入您用户名"          
+          bind:change="onChange"
+           data-name="name"
+          input-class="color-1A1A1A"
+        />
+      </div>
+      <div class="font-32 color-1A1A1A bg-fff input-title">性别</div>
+      <div>
+        <van-cell         
+          data-name="1"
+         
+        >          
+          <div slot="title" class="p-lr-10">
+            <div class="flex-box">
+              <div style="margin-right: 90rpx;">
+                <van-radio name="1" :use-icon-slot="true" bind:change="onChangeRadio">男
+                  <image slot="icon" class="radio-icon" src="../../images/radio_true.png" v-if="params.sex == 1"/>
+                  <image slot="icon" class="radio-icon" src="../../images/radio_false.png"  v-else/>
+                </van-radio>               
+              </div>
+              <div>                
+                <van-radio name="0" :use-icon-slot="true" bind:change="onChangeRadio">女
+                  <image slot="icon" class="radio-icon" src="../../images/radio_true.png" v-if="params.sex == 0"/>
+                  <image slot="icon" class="radio-icon" src="../../images/radio_false.png"  v-else/>
+                </van-radio>
+              </div>
+            </div>
+          </div>         
+        </van-cell>
+      </div>   
+      <div style="padding:84rpx 50rpx 120rpx;">
+        <div class="submit-btn" @click="register">立即申请</div>
+      </div>
+    </div>
+    <van-toast id="van-toast" /> 
+    <van-dialog id="van-dialog" />
+    <van-dialog
+      use-slot
+      title="标题"
+      show="{{ showMsgModal }}"
+      show-cancel-button      
+      bind:close="onClose"
+      bind:confirm="msgAuth"
+    >
+      <image src="https://img.yzcdn.cn/1.jpg" />
+    </van-dialog>
+  </div>
+</template>
+
+<script>
+  import wepy from '@wepy/core'
+  import eventHub from '../../common/eventHub';
+  import { mapState } from '@wepy/x';
+  import store from '../../store';
+  import testMixin from '../../mixins/test';
+  import http from '../../utils/request';
+  import Toast from '../../components/vant/toast/toast';
+  import Dialog from '../../components/vant/dialog/dialog';
+  // import icon1 from '../../images/radio_false.png';
+  // import icon2 from '../../images/radio_true.png';
+
+  var app=getApp();
+
+  wepy.page({
+    store,
+    config: {
+      navigationBarTitleText: '首页'
+    },
+
+    hooks: {
+      // Page 级别 hook, 只对当前 Page 的 setData 生效。
+      'before-setData': function (dirty) {
+       
+      }
+    },
+
+    mixins: [testMixin],
+
+    data: {
+      school:'',
+      louno:'',
+      schoolList: [], 
+      louList:[], 
+      array:[],
+      array2:[],
+      params:{
+        openid:'',
+        name:'',       
+        sex:1,       
+        school_id:'',
+        louno_id:'',
+        dormitory:''
+      },
+      showMsgModal:false,
+      btnText:'获取验证码',
+      timer:null,
+      time:60,
+      loaded:false,
+      loading: false,
+      nodata: false    
+    },    
+
+    methods: {  
+      bindPickerChange(e){
+        console.log(e)
+        this.params.school_id = this.schoolList[e.$wx.detail.value].id;
+        this.school = this.schoolList[e.$wx.detail.value].name;
+        this.getLounoList(this.params.school_id)
+      },
+      bindPickerChange2(e){
+        console.log(e)
+        this.params.louno_id = this.louList[e.$wx.detail.value].id;
+        this.louno = this.louList[e.$wx.detail.value].name;
+      },
+      onChangeRadio(e){
+        console.log(e)
+        this.params.sex = e.$wx.detail;
+      },
+      getOpenid(code,data){
+        http.get('api/schoolbox/GetUid',{code}).then(res=>{          
+          wx.setStorageSync('openid',res.data.openid);
+          this.userInfoUpdate({
+            nickname:data.$wx.detail.userInfo.nickName,
+            avatar:data.$wx.detail.userInfo.avatarUrl
+          })
+        })
+      },
+      onGotUserInfo(res){
+        console.log(res)
+        var that=this;
+        if (res.$wx.detail.errMsg === 'getUserInfo:ok') {
+          wx.login({
+            success:function(data){
+              console.log(data)
+              wx.setStorageSync('userInfo',JSON.stringify({
+                nickname:res.$wx.detail.userInfo.nickName,
+                avatar:res.$wx.detail.userInfo.avatarUrl
+              }));
+              that.getOpenid(data.code,res)
+            }
+          })
+        }        
+      },
+      getSchoolList(){
+        http.post('api/schoolbox/getSchoolList',{},false).then(res=>{
+          this.schoolList=res.data;
+          var list=[];
+          res.data.forEach(item=>{
+            list.push(item.name)
+          })
+          this.array=list;
+        }).catch(res=>{
+          Toast({ message: res.msg, forbidClick:true});
+        })
+      },
+      getLounoList(school_id){
+        http.post(`api/schoolbox/getLounoList?${this.serialize({school_id})}`,{school_id},false).then(res=>{
+          this.louList=res.data;
+          var list=[];
+          res.data.forEach(item=>{
+            list.push(item.name)
+          })
+          this.array2=list;
+        }).catch(res=>{
+          Toast({ message: res.msg, forbidClick:true});
+        })
+      },
+      onChange(e){
+        console.log(e)
+        var name = e.$wx.currentTarget.dataset.name;
+        this.params[name]=e.$wx.detail;
+      },   
+      remove(id){
+        Dialog.confirm({         
+          message: '确认删除该条提示？'
+        }).then(() => {         
+          http.post('/task/del',{id}).then(res=>{
+            Toast({ message: '删除成功', forbidClick:true,duration:1000});
+            this.params.page=1;
+            this.goTop();
+            setTimeout(()=>{
+                this.getIndexData(data=>{
+                  this.list=data;                 
+                },true)
+            },1500)
+          }).catch(res=>{
+            Toast({ message: res.msg, forbidClick:true});
+          })
+        }).catch(() => {
+          // on cancel
+        });       
+      },         
+      getYzmCode(){
+        let openid=wx.getStorageSync('openid');
+        if(!openid){
+          return this.showMsgModal=true;
+        }
+        if(!this.params.phone){
+          Toast({ message: '请输入手机号', forbidClick:true});
+          return;
+        }
+        if(!/^1[3456789]\d{9}$/.test(this.params.phone)){
+          Toast({ message: '请输入正确的手机号', forbidClick:true});
+          return;
+        }
+        if(this.btnText !== '获取验证码'){
+          return;
+        }
+        http.get('api/schoolbox/getYzmCode',{openid,phone:this.params.phone}).then(res=>{
+          this.time = 60;  
+          this.btnText= this.time+'s后重新获取';      
+          this.timer=setInterval(()=>{
+            if(this.time<=1){
+              this.btnText= '获取验证码';
+              clearInterval(this.timer); 
+              return;             
+            }
+            this.time--;
+            this.btnText= this.time+'s后重新获取';
+          },1000)
+        }).catch(res=>{
+          Toast({ message: res.msg, forbidClick:true});
+        })
+      },        
+      register(){
+        // Dialog.alert({        
+        //   message: '申请已提交 可咨询在线客服了解进度',
+        //   confirmButtonText:'好的',
+        //   closeOnClickOverlay:true
+        // }).then(() => {
+          
+        // });  
+        if(!this.params.school_id){
+          Toast({ message: '请选择学校', forbidClick:true});
+          return;
+        }
+        if(!this.params.louno_id){
+          Toast({ message: '请选择寝室', forbidClick:true});
+          return;
+        }
+        if(!this.params.dormitory){
+          Toast({ message: '请输入寝室号', forbidClick:true});
+          return;
+        }
+        if(!this.params.name){
+          Toast({ message: '请输入姓名', forbidClick:true});
+          return;
+        }       
+        let openid=wx.getStorageSync('openid');   
+        http.get('api/schoolbox/useSqBox',{...this.params,openid}).then(res=>{
+          Toast({ message: '申请已提交 可咨询在线客服了解进度', forbidClick:true,duration:1000}); 
+          setTimeout(()=>{
+            this.redirectTo('/pages/success/success');
+          },1500)   
+        }).catch(res=>{
+          Toast({ message: res.msg, forbidClick:true});
+        })
+      }
+    },
+    onLoad(){  
+      this.getSchoolList()           
+    },
+    created () {
+      
+    }
+
+    
+  });
+</script>
+<config>
+{
+    navigationBarTitleText: '申请盒子',
+    usingComponents: {
+      "van-radio": '~@/components/vant/radio/index',      
+      "van-cell": "~@/components/vant/cell/index",
+      "van-cell-group": "~@/components/vant/cell-group/index",     
+      "van-field": "~@/components/vant/field/index",
+      "van-popup": "~@/components/vant/popup/index",
+      "slide-view": "module:miniprogram-slide-view",
+      "van-toast": "~@/components/vant/toast/index",
+      "van-dialog": "~@/components/vant/dialog/index",
+      "van-loading": "~@/components/vant/loading/index",
+    }
+}
+</config>

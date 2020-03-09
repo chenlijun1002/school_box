@@ -1,0 +1,129 @@
+<style lang="less">
+ .btn{
+  height:88rpx;
+  background:#0DFFE0;
+  border-radius:44rpx;
+  font-size: 32rpx;
+  text-align: center;
+  line-height: 88rpx;
+  color:#333;
+ }
+ .color-010101{
+  color:#010101;
+ }
+ .color-333{
+  color:#333 !important;
+}
+</style>
+<template>
+  <div >
+    <van-cell title="订单编号" value="{{ordersn}}" title-class="color-010101" value-class="color-333"/>
+    <van-cell title="订单金额" value="￥{{je}}" title-class="color-010101" value-class="color-333"/>
+    <van-cell title="支付方式" value="微信支付" :is-link="true" title-class="color-010101" value-class="color-333"/>
+    <div style="padding: 40rpx 75rpx;">
+      <div class="btn" @click="pay">确认支付</div>
+    </div>
+     <van-toast id="van-toast" />
+     <van-dialog
+      use-slot
+      title="登录授权"
+      show="{{ showMsgModal }}"
+      show-cancel-button      
+      confirm-button-open-type="getUserInfo"
+      bind:close="onClose"
+      bind:getuserinfo="onGotUserInfo"
+    >
+      <text>登录授权</text>
+    </van-dialog>
+  </div>
+</template>
+
+<script>
+  import wepy from '@wepy/core'
+  import eventHub from '../../common/eventHub';
+  import { mapState } from '@wepy/x';
+  import store from '../../store';
+  import testMixin from '../../mixins/test';
+  import http from '../../utils/request';
+  import Toast from '../../components/vant/toast/toast';
+  var app=getApp();
+
+  wepy.page({
+    store,
+    config: {
+      navigationBarTitleText: 'test'
+    },
+
+    hooks: {
+      // Page 级别 hook, 只对当前 Page 的 setData 生效。
+      'before-setData': function (dirty) {
+        
+      }
+    },
+
+ 
+
+    mixins: [testMixin],
+
+    data: {
+      list:[],     
+      params:{}, 
+      totalPrice:0,
+      ordersn:0,
+      je:0,
+      loaded:false     
+    },
+
+    methods: {       
+      pay(){        
+        let openid=wx.getStorageSync('openid');
+        if(!openid){
+          return this.showMsgModal=true;
+        }
+        http.get('api/schoolbox/pay',{ordersn:this.ordersn,je:this.je,openid}).then(res=>{ 
+          res.data=JSON.parse(res.data);                                 
+          wx.requestPayment({
+            timeStamp: res.data.timeStamp,
+            nonceStr: res.data.nonceStr,
+            package: res.data.package,
+            signType: res.data.signType,
+            paySign: res.data.paySign,
+            success (res) {
+              Toast({ message: '支付成功', forbidClick:true,duration:1000});
+              setTimeout(()=>{
+                wx.redirectTo({
+                  url:'/pages/order/order'
+                })
+              },1500)
+            },
+            fail (res) { 
+              Toast({ message: '支付失败', forbidClick:true,duration:1000});
+            }
+          })
+        })
+      }
+    },
+    onLoad(options){
+      this.ordersn=options.ordersn;
+      this.je=options.je;     
+    },    
+    created () {
+     
+    }    
+  });
+</script>
+<config>
+{
+    navigationBarTitleText: '收银台',
+    usingComponents: {
+      "van-button": '~@/components/vant/button/index',       
+      "van-icon": '~@/components/vant/icon/index',
+      "van-divider": '~@/components/vant/divider/index',
+      "van-cell": "~@/components/vant/cell/index",
+      "van-cell-group": "~@/components/vant/cell-group/index",
+      "van-dialog": "~@/components/vant/dialog/index",
+      "van-toast": "~@/components/vant/toast/index",
+      "van-popup": "~@/components/vant/popup/index"    
+    }
+}
+</config>

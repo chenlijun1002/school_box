@@ -1,0 +1,393 @@
+<style lang="less">
+// @import './iconfont/iconfont.wxss';
+page{
+  color:#081F44;
+  background-color:#F7F9FB;
+}
+.container {
+  padding: 0 24rpx;
+}
+.font-bold{
+  font-weight: bold;
+}
+.font-22{
+  font-size: 22rpx;
+}
+.font-23{
+  font-size: 23rpx;
+}
+.font-24{
+  font-size: 24rpx;
+}
+.font-26{
+  font-size: 26rpx;
+}
+.font-28{
+  font-size: 28rpx;
+}
+.font-30{
+  font-size: 30rpx;
+}
+.font-32{
+  font-size: 32rpx;
+}
+.font-34{
+  font-size: 34rpx;
+}
+.font-35{
+  font-size: 35rpx;
+}
+.font-36{
+  font-size: 36rpx;
+}
+.font-38{
+  font-size: 38rpx;
+}
+.font-44{
+  font-size: 44rpx;
+}
+.font-48{
+  font-size: 48rpx;
+}
+.font-50{
+  font-size: 50rpx;
+}
+.font-52{
+  font-size: 52rpx;
+}
+.font-60{
+  font-size:60rpx;
+}
+.mr48{
+  margin-right: 48rpx;
+}
+.mt5{
+  margin-top: 5rpx;
+}
+.mt12{
+  margin-top: 12rpx;
+}
+.mt14{
+  margin-top: 14rpx;
+}
+.mt16{
+  margin-top: 16rpx;
+}
+.mt20{
+  margin-top: 20rpx;
+}
+.mt30{
+  margin-top: 30rpx;
+}
+.ml24{
+  margin-left: 24rpx;
+}
+.mb20{
+  margin-bottom: 20rpx;
+}
+.mb30{
+  margin-bottom: 30rpx;
+}
+.mb40{
+  margin-bottom: 40rpx;
+}
+.p30{
+  padding: 30rpx;
+}
+.p60{
+  padding: 60rpx;
+}
+.pl24{
+  padding-left:24rpx; 
+}
+.pl30{
+  padding-left:30rpx; 
+}
+.pb30{
+  padding-bottom:30rpx !important;
+}
+.p-lr-0{
+  padding:0;
+}
+.p-lr-10{
+  padding-left:10rpx;
+  padding-right:10rpx;
+}
+.p-lr-24{
+  padding-left:24rpx;
+  padding-right:24rpx;
+}
+.p-lr-30{
+  padding-left:30rpx;
+  padding-right:30rpx;
+}
+.p-tb-30{
+  padding-top:30rpx;
+  padding-bottom:30rpx;
+}
+.p-tb-60{
+  padding-top:60rpx;
+  padding-bottom:60rpx;
+}
+.color-fff{
+  color:#fff;
+}
+.color-1A1A1A{
+  color:#1A1A1A;
+}
+.color-666{
+  color:#666;
+}
+.color-999{
+  color:#999;
+}
+.color-9BA5B3{
+  color: #9BA5B3;
+}
+.color-EF5350{
+  color:#EF5350;
+}
+.color-536078{
+  color:#536078;
+}
+.color-primary{
+  color:#00F1D2;
+}
+.color-C7E3FB{
+  color:#C7E3FB;
+}
+.color-131313{
+  color:#131313;
+}
+.color-343434{
+  color:#343434;
+}
+.color-151515{
+  color:#151515;
+}
+.color-131313{
+  color:#131313;
+}
+.color-333{
+  color:#333;
+}
+.color-FC3D41{
+  color:#FC3D41;
+}
+.color-F74D4A{
+  color: #F74D4A;
+}
+.color-FA4B44{
+  color:#FA4B44;
+}
+.bg-fff{
+  background-color: #fff;
+}
+.bg-f5{
+  background-color: #f5f5f5;
+}
+.bg-FAEEEE{
+  background-color: #FAEEEE !important;
+}
+.text-left{
+  text-align: left;
+}
+.text-center{
+  text-align: center;
+}
+.text-right{
+  text-align: right;
+}
+.text-ellipsis{
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.text-ellipsis-2{
+  overflow:hidden; 
+  text-overflow:ellipsis;
+  display:-webkit-box; 
+  -webkit-box-orient:vertical;
+  -webkit-line-clamp:2; 
+}
+.line-bottom{
+  position: relative;
+}
+.line-bottom::after{
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom:0;
+  width: 100%;
+  height: 1px;
+  border-bottom:1px solid #E1E1E1;
+  -webkit-transform:scaleY(.5);
+  transform:scaleY(.5);
+}
+.flex-box{
+  display: flex;
+  align-items: center;
+  box-sizing: border-box;
+}
+.justify-center{
+  justify-content: center;
+}
+.justify-between{
+  justify-content: space-between;
+}
+.justify-end{
+  justify-content: flex-end;
+}
+.flex-wrap{
+  flex-wrap: wrap;
+}
+
+
+.flex {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: flex;
+}
+
+.flex-row {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-box-orient: horizontal;
+    flex-direction: row;
+}
+
+.flex-col {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-box-orient: vertical;
+    flex-direction: column;
+}
+
+.flex-grow-0 {
+    min-width: 0;
+    -webkit-box-flex: 0;
+    -ms-flex-positive: 0;
+    flex-grow: 0;
+    -ms-flex-negative: 0;
+    flex-shrink: 0;
+}
+
+.flex-grow-1 {
+    min-width: 0;
+    -webkit-box-flex: 1;
+    -ms-flex-positive: 1;
+    flex-grow: 1;
+    -ms-flex-negative: 1;
+    flex-shrink: 1;
+}
+
+.flex-x-center {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+}
+
+.flex-y-center {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    -ms-grid-row-align: center;
+    align-items: center;
+}
+
+.flex-y-bottom {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-box-align: end;
+    -ms-flex-align: end;
+    -ms-grid-row-align: flex-end;
+    align-items: flex-end;
+}
+</style>
+
+<script>
+import wepy from '@wepy/core';
+import eventHub from './common/eventHub';
+import vuex from '@wepy/x';
+
+wepy.use(vuex);
+
+
+wepy.app({
+  hooks: {
+    // App 级别 hook，对整个 App 生效
+    // 同时存在 Page hook 和 App hook 时，优先执行 Page hook，返回值再交由 App hook 处
+    'before-setData': function (dirty) {
+      
+    }
+  },
+  globalData: {
+    userInfo: null,
+    token:'',
+    header:{},
+    orgId:0,
+    orgName:'',
+    //baseUrl:'https://schoolbox.palbt.com/public/'
+    baseUrl: 'https://www.xianxianbang.com.cn/public/'
+  },
+
+  onLaunch() {
+   
+  },
+
+  methods: {    
+    navigateTo(url){
+      wx.navigateTo({
+        url
+      })
+    },
+    redirectTo(url){
+      wx.redirectTo({
+        url
+      })
+    },
+    sleep (s) {
+      return new Promise((resolve, reject) => {
+        setTimeout(() => {
+          resolve('promise resolved')
+        }, s * 1000)
+      })
+    },
+
+    async testAsync () {
+      let d = await this.sleep(3);
+      console.log(d);
+    }
+  }
+});
+</script>
+<config>
+{
+    pages: [
+      'pages/index/index',
+      'pages/register/register',
+      'pages/order/order',   
+      'pages/my/my',
+      'pages/success/success',
+      'pages/apply/apply',
+      'pages/settlement/settlement',
+      'pages/cart/cart',
+      'pages/orderDetail/orderDetail',
+      'pages/productDetail/productDetail'
+    ],    
+    window: {
+      backgroundTextStyle: 'light',
+      navigationBarBackgroundColor: '#fff',
+      navigationBarTitleText: 'WeChat',
+      navigationBarTextStyle: 'black'
+    }
+}
+</config>

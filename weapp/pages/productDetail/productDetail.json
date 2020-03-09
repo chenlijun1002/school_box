@@ -1,0 +1,16 @@
+{
+    "navigationBarTitleText": "商品详情",
+    "component": true,
+    "usingComponents": {
+        "van-button": "../../components/vant/button/index",
+        "van-icon": "../../components/vant/icon/index",
+        "van-stepper": "../../components/vant/stepper/index",
+        "van-cell": "../../components/vant/cell/index",
+        "van-cell-group": "../../components/vant/cell-group/index",
+        "van-tabbar": "../../components/vant/tabbar/index",
+        "van-tabbar-item": "../../components/vant/tabbar-item/index",
+        "van-toast": "../../components/vant/toast/index",
+        "van-dialog": "../../components/vant/dialog/index",
+        "van-popup": "../../components/vant/popup/index"
+    }
+}

@@ -1,0 +1,20 @@
+{
+    "navigationBarTitleText": "首页",
+    "component": true,
+    "usingComponents": {
+        "van-stepper": "../../components/vant/stepper/index",
+        "van-icon": "../../components/vant/icon/index",
+        "van-sidebar": "../../components/vant/sidebar/index",
+        "van-sidebar-item": "../../components/vant/sidebar-item/index",
+        "van-cell": "../../components/vant/cell/index",
+        "van-cell-group": "../../components/vant/cell-group/index",
+        "van-tabbar": "../../components/vant/tabbar/index",
+        "van-tabbar-item": "../../components/vant/tabbar-item/index",
+        "van-transition": "../../components/vant/transition/index",
+        "van-overlay": "../../components/vant/overlay/index",
+        "van-popup": "../../components/vant/popup/index",
+        "van-toast": "../../components/vant/toast/index",
+        "van-dialog": "../../components/vant/dialog/index",
+        "van-loading": "../../components/vant/loading/index"
+    }
+}

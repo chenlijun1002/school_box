@@ -1,0 +1,55 @@
+
+<view class="main">
+  <block>      
+    <view style="height: 98rpx;margin-bottom:16rpx;" class="bg-fff">    
+      <van-tabs bind_init="_initComponent" color="#0DFFE0" data-wpy-evt="9-0" bindchange="_proxy">
+          <van-tab bind_init="_initComponent" title="全部"></van-tab>
+          <van-tab bind_init="_initComponent" title="待付款"></van-tab>
+          <van-tab bind_init="_initComponent" title="已完成"></van-tab>           
+        </van-tabs>                        
+    </view>       
+    <view class="order-list">
+      <view wx:for="{{ list }}" wx:for-index="index" wx:for-item="item" wx:key="index" key="{{ item.id }}" class="order-item">
+        <view class="order-title">{{item.createtime}}</view>
+        <view class="p-tb-30">
+          <view wx:for="{{ item.orderdesc }}" wx:for-index="index" wx:for-item="v" wx:key="index" key="{{ v.id }}" style="height: 52rpx;" class="flex-box font-26 color-131313 p-lr-24">
+            <view style="flex:2;"><text class="product-name">{{v.name}}</text><text style="margin-left:40rpx;">X{{v.num}}</text></view>
+            <view style="flex:1;padding-right: 46rpx;text-align:right;" class="font-24 color-343434 text-right">￥{{v.price}}</view>
+          </view>           
+        </view>
+        <view class="order-bottom">
+          <view style="justify-content: space-between;" class="flex-box">
+            
+            <view class="color-999 font-24">{{item.address}}</view>
+            <view class="font-26">
+              <view class="flex-box">
+                <view data-wpy-evt="9-1" bindtap="_proxy" data-wpytap-a="{{ item }}" class="remove-btn">删除</view>
+                <view wx:if="{{ item.status == 0 }}" data-wpy-evt="9-2" bindtap="_proxy" data-wpytap-a="{{ item }}" class="add-cart-btn">加入购物车</view>
+                <view wx:if="{{ item.status == 1 }}" data-wpy-evt="9-3" bindtap="_proxy" data-wpytap-a="{{ item }}" class="add-cart-btn">查看详情</view>
+              </view>
+            </view>
+          </view>
+        </view>
+      </view> 
+      <block wx:if="{{ !total }}">
+        <view style="width:432rpx;margin:0 auto;margin-top:100rpx;">
+          <image src="../../images/home-no-data.png" style="width:432rpx;height:236rpx;"></image>
+          <view style="padding:32rpx 23rpx;color:#A1A1A1;" class="text-center font-26">
+            <text>暂无相关的订单</text>
+          </view>
+        </view>
+      </block>
+      <view wx:if="{{ loading }}" style="padding:20rpx 0;" class="text-center color-999">
+        <van-loading bind_init="_initComponent" type="spinner" size="{{ 20 }}">加载中</van-loading>
+      </view>      
+      <view wx:if="{{ nodata }}" style="padding:20rpx 0;" class="text-center color-999">
+        <text style="margin-left:10px;font-size:28rpx;">没有更多数据</text>
+      </view>      
+    </view>           
+  </block>
+  <van-toast bind_init="_initComponent" id="van-toast"></van-toast> 
+  <van-dialog bind_init="_initComponent" id="van-dialog"></van-dialog>
+  <van-dialog bind_init="_initComponent" use-slot="" title="登录授权" show="{{ showMsgModal }}" show-cancel-button="" confirm-button-open-type="getUserInfo" data-wpy-evt="9-4" bindclose="_proxy" bindgetuserinfo="_proxy">
+    <text>登录授权</text>
+  </van-dialog>
+</view>

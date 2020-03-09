@@ -1,0 +1,68 @@
+
+<view style="padding-bottom: 40rpx;" class="container">
+  <view class="header"></view>
+  <view class="main">
+    <view>
+      <van-cell bind_init="_initComponent" border="{{ false }}" custom-style="padding:24px 15px 0 20px !important;">
+        <view slot="title" class="font-30 color-999">欢迎注册</view>
+      </van-cell>
+    </view>
+    <view class="custom-cell">
+      <van-cell bind_init="_initComponent">
+        <view slot="title" class="cell-title p-lr-10">            
+          <picker range="{{array}}" data-wpy-evt="12-0" bindchange="_proxy" style="display:inline !important;">              
+            <text>{{school||'请选择学校'}}</text>
+            <image src="../../images/select-arrow.png" class="select-arrow"></image>
+          </picker>            
+        </view>
+      </van-cell>
+    </view>      
+    <view class="custom-cell">
+      <van-cell bind_init="_initComponent">
+        <view slot="title" class="cell-title p-lr-10">
+          <picker range="{{array2}}" data-wpy-evt="12-1" bindchange="_proxy" style="display:inline !important;">              
+            <text>{{louno||'请选择寝室'}}</text>
+            <image src="../../images/select-arrow.png" class="select-arrow"></image>
+          </picker>            
+        </view>
+      </van-cell>
+    </view>
+    <view class="font-32 color-1A1A1A bg-fff input-title">寝室号</view>
+    <view>
+      <van-field bind_init="_initComponent" value="{{ params.dormitory }}" placeholder="请输入寝室号" data-name="dormitory" input-class="color-1A1A1A" data-wpy-evt="12-2" bindchange="_proxy"></van-field>
+    </view>
+    <view class="font-32 color-1A1A1A bg-fff input-title">姓名</view>
+    <view>
+      <van-field bind_init="_initComponent" value="{{ params.name }}" placeholder="请输入您用户名" data-name="name" input-class="color-1A1A1A" data-wpy-evt="12-3" bindchange="_proxy"></van-field>
+    </view>
+    <view class="font-32 color-1A1A1A bg-fff input-title">性别</view>
+    <view>
+      <van-cell bind_init="_initComponent" data-name="1">          
+        <view slot="title" class="p-lr-10">
+          <view class="flex-box">
+            <view style="margin-right: 90rpx;">
+              <van-radio bind_init="_initComponent" name="1" use-icon-slot="{{ true }}" data-wpy-evt="12-4" bindchange="_proxy">男
+                <image slot="icon" src="../../images/radio_true.png" wx:if="{{ params.sex == 1 }}" class="radio-icon"></image>
+                <image slot="icon" src="../../images/radio_false.png" wx:else class="radio-icon"></image>
+              </van-radio>               
+            </view>
+            <view>                
+              <van-radio bind_init="_initComponent" name="0" use-icon-slot="{{ true }}" data-wpy-evt="12-5" bindchange="_proxy">女
+                <image slot="icon" src="../../images/radio_true.png" wx:if="{{ params.sex == 0 }}" class="radio-icon"></image>
+                <image slot="icon" src="../../images/radio_false.png" wx:else class="radio-icon"></image>
+              </van-radio>
+            </view>
+          </view>
+        </view>         
+      </van-cell>
+    </view>   
+    <view style="padding:84rpx 50rpx 120rpx;">
+      <view data-wpy-evt="12-6" bindtap="_proxy" class="submit-btn">立即申请</view>
+    </view>
+  </view>
+  <van-toast bind_init="_initComponent" id="van-toast"></van-toast> 
+  <van-dialog bind_init="_initComponent" id="van-dialog"></van-dialog>
+  <van-dialog bind_init="_initComponent" use-slot="" title="标题" show="{{ showMsgModal }}" show-cancel-button="" data-wpy-evt="12-7" bindclose="_proxy" bindconfirm="_proxy">
+    <image src="https://img.yzcdn.cn/1.jpg"></image>
+  </van-dialog>
+</view>

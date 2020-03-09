@@ -1,0 +1,46 @@
+
+<view class="main">
+  <view class="header flex-box">
+      <view style="line-height:46rpx;" class="font-30 color-343434">
+          <view>订单已完成</view>
+          <view>{{info.updatetime}}</view>
+      </view>
+  </view>
+  <view style="padding:33rpx;" class="bg-fff">
+      <view class="flex-box">
+          <image src="../../images/dingwei.png" class="address-icon"></image>
+          <text class="font-28 color-333">{{info.address}}</text>
+      </view>
+  </view>
+  <view class="content">
+      <view class="flex-box">
+          <image src="../../images/store-icon.png" class="store-icon"></image>
+          <text class="font-28 color-333">{{info.shopboxname}}</text>
+      </view>
+      <view class="product-list">
+          <view wx:for="{{ info.orderdesc }}" wx:for-index="index" wx:for-item="item" wx:key="index" key="{{ item.id }}" class="product-item">
+              <view style="padding-right:26rpx;">
+                  <image src="{{ baseUrl+item.mainimage }}" class="product-img"></image>
+              </view>
+              <view style="flex:1;">
+                  <view class="font-28 color-151515 mb40">{{item.name}}</view>
+                  <view style="width:100%;" class="flex-box font-28 justify-between">
+                      <view class="color-FC3D41">￥{{item.price}}<text class="font-26 ml24 color-131313">X{{item.num}}</text></view>                       
+                  </view>
+              </view>
+          </view>
+      </view>
+  </view>
+  <view style="padding:36rpx 30rpx;margin-top:10rpx;" class="bg-fff color-151515">
+      <view class="flex-box justify-between">
+          <view>商品小计</view>
+          <view>￥{{info.je}}</view>
+      </view>
+  </view>
+  <view style="padding:36rpx 30rpx;margin-top:10rpx;" class="bg-fff color-151515">
+      <view class="flex-box justify-between">
+          <view>创建时间</view>
+          <view>{{info.createtime}}</view>
+      </view>
+  </view>
+</view>

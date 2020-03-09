@@ -1,0 +1,295 @@
+<style lang="less">
+    .select-btn{
+        width:140rpx;
+        height:60rpx;
+        line-height: 60rpx;
+        text-align: center;
+        font-size: 28rpx;
+        color:#323232;
+        background:#0DFFE0;
+        border-radius:30rpx;
+    }
+    .product-detail-title{
+        height: 90rpx;
+        line-height: 90rpx;
+        padding: 0 30rpx;
+        font-size: 26rpx;
+        color:#333;
+        margin-top: 10rpx;
+        background-color: #fff;
+    }
+    .product-detail-content{
+        padding: 24rpx;
+        // background-color: #fff;
+    }
+    .submit-bar{
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 90rpx;
+        background-color: #fff;
+        .submit-btn{
+          display: inline-block;
+          width: 168rpx;
+          height: 100%;
+          line-height: 90rpx;
+          text-align: center;
+          font-size: 30rpx;
+          color:#323232;
+          background-color: #0DFFE0;
+        }
+        .cart-icon{
+            position: relative;
+            width:47rpx;
+            height: 43rpx;
+            margin-right: 48rpx;
+            display: inline-block;
+            .cart-img{
+                width:100%;
+                height: 100%;
+                vertical-align: top;
+            }
+            .num{
+                min-width: 28rpx;
+                min-height: 28rpx;
+                text-align:center;
+                line-height:28rpx;
+                position: absolute;
+                right:-5rpx;
+                top:-6rpx;
+                /* padding:8rpx; */
+                background:#FF794A;
+                border-radius:50%;
+                font-size:20rpx;
+                color:#fff;
+            }
+        }
+    }
+</style>
+<template>
+  <div class="main" v-if="loaded">
+    <div class="header">
+      <!-- <swiper
+        :indicator-dots="true"
+        :autoplay="true"
+        :interval="2000"                                        
+        style="height:580rpx;"
+      >    
+        <swiper-item>
+          <image :src="baseUrl+info.mainimage" class="slide-image" mode="aspectFit" />                      
+        </swiper-item>      
+      </swiper> -->
+      <image :src="baseUrl+info.mainimage" class="slide-image" mode="aspectFit" style="width:100%;height:580rpx;"/>
+    </div>
+    <div style="padding:30rpx;" class="bg-fff">
+        <div class="flex-box justify-between mb30">
+            <div class="font-32 color-333">{{info.name}}</div>
+            <!-- <div class="select-btn">选规格</div> -->
+        </div>
+        <div class="flex-box justify-between">
+            <div class="font-48 color-FA4B44"><text class="font-35">￥</text>{{info.price||'0.00'}}</div>
+            <div>
+                <van-stepper
+                    value="{{ num }}"
+                    integer
+                    min="1"
+                    max="{{info.num}}"
+                    step="1"
+                    bind:change="onChangeStepper"                              
+                />
+            </div>
+        </div>
+    </div>
+    <div class="product-detail-title">商品详情</div>
+    <div class="product-detail-content">
+      <block v-for="(item,index) in info.goodsdesc" :key="index" v-if="info.goodsdesc">
+          <rich-text style="width:100%;max-width:100%!important;" nodes="{{[item]}}"></rich-text>   
+      </block> 
+    </div>
+    <div class="submit-bar">
+        <div style="height:100%;" class="flex-box justify-between">
+            <div style="padding-left:38rpx;" class="flex-box">
+                <div class="cart-icon" @click="navigateTo('/pages/cart/cart')">
+                    <image src="../../images/cart-2.png" class="cart-img"/>
+                    <div class="num">{{cartNum}}</div>
+                </div>
+                <div class="font-48 color-FA4B44" style="display: inline-block;"><text class="font-35">￥</text>{{totalPrice}}</div>
+            </div>
+            <div>
+              <div class="submit-btn" @click="addCart" style="background-color: rgba(13,255,224,0.6);">加入购物车</div>
+              <div class="submit-btn" @click="submit">结算</div>
+            </div>
+        </div>
+    </div>
+    <van-dialog
+      use-slot
+      title="登录授权"
+      show="{{ showMsgModal }}"
+      show-cancel-button      
+      confirm-button-open-type="getUserInfo"
+      bind:close="onClose"
+      bind:getuserinfo="onGotUserInfo"
+    >
+      <text>登录授权</text>
+    </van-dialog>
+  </div>
+</template>
+
+<script>
+  import wepy from '@wepy/core'
+  import eventHub from '../../common/eventHub';
+  import { mapState } from '@wepy/x';
+  import store from '../../store';
+  import testMixin from '../../mixins/test';
+  import http from '../../utils/request';
+  import Toast from '../../components/vant/toast/toast';
+  import richText from '../../utils/richText';
+  var app=getApp();
+
+  wepy.page({
+    store,
+    config: {
+      navigationBarTitleText: 'test'
+    },
+
+    hooks: {
+      // Page 级别 hook, 只对当前 Page 的 setData 生效。
+      'before-setData': function (dirty) {
+        
+      }
+    },
+
+ 
+
+    mixins: [testMixin],
+
+    data: {
+      baseUrl:app.$wepy.$options.globalData.baseUrl,
+      id:0,
+      info:{},
+      num:1,
+      cartNum:0,
+      totalPrice:0,
+      showMsgModal:false,
+      loaded:false     
+    },
+
+    methods: {      
+     getData(cb){
+        let shopbox_id=wx.getStorageSync('shopbox_id');
+        http.get(`api/schoolbox/getGoodsDesc`,{goods_id:this.id,shopbox_id}).then(res=>{   
+          let data=res.data.goodsdesc.replace(/\<br\>/g,'<br />');          
+          res.data.goodsdesc=data?richText.go(data):'';                      
+          this.info=res.data;
+          this.totalPrice=(this.num*(this.info.price||0)).toFixed(2)
+          this.loaded=true;
+          if(cb && typeof cb ==='function')  cb();       
+        })
+      },
+      onChangeStepper(e){
+        this.num=e.$wx.detail;  
+        this.totalPrice=(this.num*(this.info.price||0)).toFixed(2)    
+      },
+      getOpenid(code,data){
+        http.get('api/schoolbox/GetUid',{code}).then(res=>{          
+          wx.setStorageSync('openid',res.data.openid);
+
+          this.userInfoUpdate({
+            nickname:data.$wx.detail.userInfo.nickName,
+            avatar:data.$wx.detail.userInfo.avatarUrl
+          })
+        })
+      },
+      onGotUserInfo(res){
+        console.log(res)
+        var that=this;
+        if (res.$wx.detail.errMsg === 'getUserInfo:ok') {
+          wx.login({
+            success:function(data){
+              console.log(data)
+              wx.setStorageSync('userInfo',JSON.stringify({
+                nickname:res.$wx.detail.userInfo.nickName,
+                avatar:res.$wx.detail.userInfo.avatarUrl
+              }));
+              that.getOpenid(data.code,res)
+            }
+          })
+        }        
+      },
+      getCartProduct(){        
+        let openid=wx.getStorageSync('openid');
+        let shopbox_id=wx.getStorageSync('shopbox_id');
+        http.get(`api/schoolbox/getCartGoodsList`,{openid,shopbox_id},false).then(res=>{                        
+          this.cartNum = res.data.length;             
+        }).catch(res => {
+          Toast({ message: res.data.msg||'获取购物车商品失败', forbidClick:true,duration:1000}); 
+        })
+      },
+      addCart(){        
+        let openid=wx.getStorageSync('openid');
+        let shopbox_id=wx.getStorageSync('shopbox_id');
+        if(!openid){
+          return this.showMsgModal=true;
+        }  
+        let params ={
+          openid,
+          shopbox_id,
+          price:this.info.price,
+          goods_id:this.info.goods_id,          
+          specval:this.info.specval         
+        };
+        http.get(`api/schoolbox/addCart`,{...params}).then(res=>{                                   
+          Toast({ message: '添加成功', forbidClick:true,duration:1000}); 
+          this.getCartProduct();        
+        }).catch(res => {
+          Toast({ message: res.data.msg||'添加失败', forbidClick:true,duration:1000}); 
+        })
+      },
+      submit(){          
+        this.ordersubmit()        
+      },
+      ordersubmit(){
+        let shopbox_id=wx.getStorageSync('shopbox_id');
+        let params ={
+          shopbox_id,
+          num:this.num,
+          goods:[{goods_id:this.info.goods_id,num:this.info.num,price:this.info.price,specval:this.info.specval}],         
+          je:this.totalPrice
+        };
+        let openid=wx.getStorageSync('openid');
+        if(!openid){
+          return this.showMsgModal=true;
+        }
+        http.get('api/schoolbox/ordersubmit',{...params,openid}).then(res=>{                        
+          this.navigateTo('/pages/settlement/settlement?ordersn='+res.data.ordersn+'&je='+this.totalPrice);
+        })
+      }
+    },   
+    onLoad(options){
+      this.id=options.id;
+      this.getData();
+      this.getCartProduct();
+    },
+    created () {
+     
+    }    
+  });
+</script>
+<config>
+{
+    navigationBarTitleText: '商品详情',
+    usingComponents: {
+      "van-button": '~@/components/vant/button/index',       
+      "van-icon": '~@/components/vant/icon/index',
+      "van-stepper": "~@/components/vant/stepper/index", 
+      "van-cell": "~@/components/vant/cell/index",
+      "van-cell-group": "~@/components/vant/cell-group/index",
+      "van-tabbar": "~@/components/vant/tabbar/index",
+      "van-tabbar-item": "~@/components/vant/tabbar-item/index",
+      "van-toast": "~@/components/vant/toast/index",
+      "van-dialog": "~@/components/vant/dialog/index",
+      "van-popup": "~@/components/vant/popup/index"    
+    }
+}
+</config>

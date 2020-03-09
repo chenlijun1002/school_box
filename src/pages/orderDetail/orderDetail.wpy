@@ -1,0 +1,154 @@
+<style lang="less">
+    .header{
+        width:100%;
+        height:200rpx;
+        background:#0DFFE0;
+        padding: 0 60rpx;
+    }
+    .address-icon{
+        width: 34rpx;
+        height: 34rpx;
+        margin-right: 18rpx;
+    }
+    .content{
+        padding: 20rpx 30rpx 0;
+        background: #ffffff;
+        margin-top: 10rpx;
+        .store-icon{
+            width: 40rpx;
+            height: 40rpx;
+            margin-right: 16rpx;
+        }
+        .product-item{
+            display: flex;
+            align-items: center;
+            padding: 30rpx 0;
+            width: 100%;        
+            .product-img{
+                width: 120rpx;
+                height: 120rpx;
+                border-radius: 6rpx;
+            }
+        }
+    }
+</style>
+<template>
+  <div class="main">
+    <div class="header flex-box">
+        <div class="font-30 color-343434" style="line-height:46rpx;">
+            <div>订单已完成</div>
+            <div>{{info.updatetime}}</div>
+        </div>
+    </div>
+    <div style="padding:33rpx;" class="bg-fff">
+        <div class="flex-box">
+            <image class="address-icon" src="../../images/dingwei.png"/>
+            <text class="font-28 color-333">{{info.address}}</text>
+        </div>
+    </div>
+    <div class="content">
+        <div class="flex-box">
+            <image class="store-icon" src="../../images/store-icon.png"/>
+            <text class="font-28 color-333">{{info.shopboxname}}</text>
+        </div>
+        <div class="product-list">
+            <div class="product-item" v-for="item in info.orderdesc" :key="item.id">
+                <div style="padding-right:26rpx;">
+                    <image :src="baseUrl+item.mainimage" class="product-img"/>
+                </div>
+                <div style="flex:1;">
+                    <div class="font-28 color-151515 mb40">{{item.name}}</div>
+                    <div class="flex-box font-28 justify-between" style="width:100%;">
+                        <div class="color-FC3D41">￥{{item.price}}<text class="font-26 ml24 color-131313">X{{item.num}}</text></div>                       
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div style="padding:36rpx 30rpx;margin-top:10rpx;" class="bg-fff color-151515">
+        <div class="flex-box justify-between">
+            <div>商品小计</div>
+            <div>￥{{info.je}}</div>
+        </div>
+    </div>
+    <div style="padding:36rpx 30rpx;margin-top:10rpx;" class="bg-fff color-151515">
+        <div class="flex-box justify-between">
+            <div>创建时间</div>
+            <div>{{info.createtime}}</div>
+        </div>
+    </div>
+  </div>
+</template>
+
+<script>
+  import wepy from '@wepy/core'
+  import eventHub from '../../common/eventHub';
+  import { mapState } from '@wepy/x';
+  import store from '../../store';
+  import testMixin from '../../mixins/test';
+  import http from '../../utils/request';
+  import Toast from '../../components/vant/toast/toast';
+  var app=getApp();
+
+  wepy.page({
+    store,
+    config: {
+      navigationBarTitleText: 'test'
+    },
+
+    hooks: {
+      // Page 级别 hook, 只对当前 Page 的 setData 生效。
+      'before-setData': function (dirty) {
+        
+      }
+    },
+
+ 
+
+    mixins: [testMixin],
+
+    data: {
+      baseUrl:app.$wepy.$options.globalData.baseUrl,
+      info:{}, 
+    //   shopbox_name:'',
+      ordersn:0, 
+      loaded:false     
+    },
+
+    methods: {
+     getOrderDesc(){
+        let openid=wx.getStorageSync('openid');
+        http.get('api/schoolbox/getOrderDesc',{ordersn:this.ordersn,openid}).then(res=>{        
+          res.data.createtime && (res.data.createtime=this.date(res.data.createtime));
+          res.data.updatetime && (res.data.updatetime=this.date(res.data.updatetime));
+          this.info=res.data;
+          this.loaded=true;       
+        })
+      }     
+    },
+    onLoad(options){
+      this.ordersn= options.ordersn;
+    //   this.shopbox_name = wx.getStorageSync('shopbox_name');
+      this.getOrderDesc();
+    },
+    created () {
+     
+    }  
+  });
+</script>
+<config>
+{
+    navigationBarTitleText: '订单详情',
+    usingComponents: {
+      "van-button": '~@/components/vant/button/index',       
+      "van-icon": '~@/components/vant/icon/index',
+      "van-divider": '~@/components/vant/divider/index',
+      "van-cell": "~@/components/vant/cell/index",
+      "van-cell-group": "~@/components/vant/cell-group/index",
+      "van-tabbar": "~@/components/vant/tabbar/index",
+      "van-tabbar-item": "~@/components/vant/tabbar-item/index",
+      "van-toast": "~@/components/vant/toast/index",
+      "van-popup": "~@/components/vant/popup/index"    
+    }
+}
+</config>
